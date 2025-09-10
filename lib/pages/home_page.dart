@@ -1,0 +1,432 @@
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:smartcare/config/component/colors.dart';
+import 'package:smartcare/config/component/font.dart';
+import 'package:smartcare/config/getx/fabcontroller.dart';
+import 'package:smartcare/widgets/activities.dart';
+
+class HomePage extends StatefulWidget {
+  const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  // @override
+  // Widget build(BuildContext context) {
+  //   return Scaffold(
+  //     appBar: AppBar(
+  //       title: Align(
+  //         alignment: Alignment.centerLeft,
+  //         child: Text(
+  //           'Smart Care',
+  //           textAlign: TextAlign.left,
+  //           style: AppFont.appbarfontblack(context),
+  //         ),
+  //       ),
+  //     ),
+  //     body: SingleChildScrollView(child: Column(children: [
+
+  //         ],
+  //       )),
+  //   );
+  // }
+
+  Future<void> onrefreshToggle() async {
+    // await fetchDashboardData(isRefresh: true);
+    // await uploadCallLogsAfterLogin();
+  }
+  // Initialize the controller
+  final FabController fabController = Get.put(FabController());
+  @override
+  Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final responsiveFontSize = screenWidth * 0.035;
+    return GestureDetector(
+      excludeFromSemantics: true,
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: Stack(
+        children: [
+          Scaffold(
+            backgroundColor: Colors.white,
+            appBar: AppBar(
+              automaticallyImplyLeading: false,
+              backgroundColor: AppColors.white,
+              title: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  'Smart Care',
+                  textAlign: TextAlign.left,
+                  style: AppFont.appbarfontblack(context),
+                ),
+              ),
+            ),
+            body: Stack(
+              children: [
+                SafeArea(
+                  child: RefreshIndicator(
+                    onRefresh: onrefreshToggle,
+                    child:
+                        // isDashboardLoading
+                        //     ? SkeletonHomepage()
+                        //     :
+                        SingleChildScrollView(
+                          controller: fabController.scrollController,
+                          keyboardDismissBehavior:
+                              ScrollViewKeyboardDismissBehavior.onDrag,
+                          child: Column(
+                            children: [
+                              Container(
+                                margin: EdgeInsets.only(left: 20),
+                                child: Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(
+                                    'Activities',
+                                    textAlign: TextAlign.left,
+                                    style: AppFont.appbarfontmedium14Bold(
+                                      context,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              // SizedBox(height: 5),
+
+                              /// ✅ Row with Menu, Search Bar, and Microphone
+
+                              // const SizedBox(height: 3),
+                              Activities(),
+
+                              // BottomBtnSecond(key: _bottomBtnSecondKey),
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                  left: 10.0,
+                                  right: 10.0,
+                                ),
+                                child: Row(
+                                  // mainAxisAlignment:
+                                  //     MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      'Performance Analysis',
+                                      style: AppFont.appbarfontgrey(context),
+                                    ),
+                                    // IconButton(
+                                    //   onPressed: () {
+                                    //     setState(() {
+                                    //       // _isHidden = !_isHidden;
+                                    //     });
+                                    //   },
+                                    //   icon: Icon(
+                                    //     // // _isHidden
+                                    //     //     ? Icons.keyboard_arrow_down_rounded
+                                    //     //     : Icons.keyboard_arrow_up_rounded,
+                                    //     // size: 35,
+                                    //     // color: AppColors.iconGrey,
+                                    //   ),
+                                    // ),
+                                  ],
+                                ),
+                              ),
+
+                              // if (!_isHidden) ...[const BottomBtnThird()],
+                              const SizedBox(height: 10),
+                            ],
+                          ),
+                        ),
+                  ),
+                ),
+
+                // Replace your current Positioned widget with:
+                // Obx(
+                //   () => AnimatedPositioned(
+                //     duration: const Duration(milliseconds: 300),
+                //     curve: Curves.easeInOut,
+                //     bottom: fabController.isFabVisible.value ? 26 : -80,
+                //     right: 18,
+                //     child: AnimatedOpacity(
+                //       duration: const Duration(milliseconds: 300),
+                //       opacity: fabController.isFabVisible.value ? 1.0 : 0.0,
+                //       child: _buildFloatingActionButton(context),
+                //     ),
+                //   ),
+                // ),
+
+                // Update your popup menu condition:
+                Obx(
+                  () =>
+                      fabController.isFabExpanded.value &&
+                          fabController.isFabVisible.value
+                      ? _buildPopupMenu(context)
+                      : const SizedBox.shrink(),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildFloatingActionButton(BuildContext context) {
+    return Obx(() {
+      if (!fabController.isFabVisible.value) {
+        return const SizedBox.shrink();
+      }
+
+      return AnimatedBuilder(
+        animation: Listenable.merge([
+          fabController.rotation,
+          fabController.scale,
+        ]),
+        builder: (context, child) {
+          // Ensure all animation values are safe
+          final rotationValue = (fabController.rotation.value).clamp(0.0, 1.0);
+          final scaleValue = (fabController.scale.value).clamp(0.5, 2.0);
+
+          return Transform.scale(
+            scale: scaleValue,
+            child: Transform.rotate(
+              angle: rotationValue * 2 * 3.14159,
+              child: GestureDetector(
+                onTap: () {
+                  print(
+                    'FAB tapped - Current state: Visible(${fabController.isFabVisible.value}), Disabled(${fabController.isFabDisabled.value})',
+                  );
+                  fabController.toggleFab();
+                },
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 300),
+                  width: MediaQuery.of(context).size.width * .14,
+                  height: MediaQuery.of(context).size.height * .08,
+                  decoration: BoxDecoration(
+                    color:
+                        // fabController.isFabDisabled.value
+                        //     ? Colors.grey.withOpacity(0.5)
+                        //     :
+                        (fabController.isFabExpanded.value
+                        ? Colors.red
+                        : AppColors.colorsBlue),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Center(
+                    child: AnimatedSwitcher(
+                      duration: const Duration(milliseconds: 200),
+                      transitionBuilder: (child, animation) {
+                        return ScaleTransition(scale: animation, child: child);
+                      },
+                      child: Icon(
+                        fabController.isFabExpanded.value
+                            ? Icons.add
+                            : Icons.add,
+                        key: ValueKey(fabController.isFabExpanded.value),
+                        color:
+                            //  fabController.isFabDisabled.value
+                            //     ? Colors.grey
+                            //     :
+                            Colors.white,
+                        size: 30,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          );
+        },
+      );
+    });
+  }
+
+  Widget _buildPopupMenu(BuildContext context) {
+    return Obx(() {
+      if (!fabController.isFabExpanded.value ||
+          !fabController.isFabVisible.value) {
+        return const SizedBox.shrink();
+      }
+
+      return GestureDetector(
+        onTap: fabController.closeFab,
+        child: Stack(
+          children: [
+            // Simple background overlay without animation
+            Positioned.fill(
+              child: Container(color: Colors.black.withOpacity(0.7)),
+            ),
+
+            // Popup Items Container with safe animation
+            Positioned(
+              bottom: 90,
+              right: 20,
+              child: AnimatedBuilder(
+                animation: fabController.menu,
+                builder: (context, child) {
+                  final menuValue = fabController.menu.value.clamp(0.0, 1.0);
+
+                  return Transform.scale(
+                    scale: (0.3 + (menuValue * 0.7)).clamp(0.3, 1.0),
+                    alignment: Alignment.bottomRight,
+                    child: Opacity(
+                      opacity: menuValue,
+                      child: SizedBox(
+                        width: 200,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            _buildSafePopupItem(
+                              Icons.calendar_month_outlined,
+                              "Appointment",
+                              0,
+                              menuValue,
+                              onTap: () {
+                                fabController.closeFab();
+                                // _showAppointmentPopup(context);
+                              },
+                            ),
+                            _buildSafePopupItem(
+                              Icons.person_search,
+                              "Enquiry",
+                              1,
+                              menuValue,
+                              onTap: () {
+                                fabController.closeFab();
+                                // _showLeadPopup(context);
+                              },
+                            ),
+                            _buildSafePopupItem(
+                              Icons.call,
+                              "Followup",
+                              2,
+                              menuValue,
+                              onTap: () {
+                                fabController.closeFab();
+                                // _showFollowupPopup(context);
+                              },
+                            ),
+                            _buildSafePopupItem(
+                              Icons.directions_car,
+                              "Test Drive",
+                              3,
+                              menuValue,
+                              onTap: () {
+                                fabController.closeFab();
+                                // _showTestdrivePopup(context);
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+
+            // FAB positioned above the overlay
+            Positioned(
+              bottom: 26,
+              right: 18,
+              child: _buildFloatingActionButton(context),
+            ),
+          ],
+        ),
+      );
+    });
+  }
+
+  Widget _buildSafePopupItem(
+    IconData icon,
+    String label,
+    int index,
+    double menuProgress, {
+    required Function() onTap,
+  }) {
+    // Simple delay calculation that won't cause issues
+    final delay = (index * 100).toDouble(); // milliseconds delay
+    final totalDuration = 400.0; // total animation duration in ms
+
+    // Calculate progress for this item (0.0 to 1.0)
+    double itemProgress = 0.0;
+    if (menuProgress > 0.1) {
+      // Start after 10% of menu animation
+      itemProgress = ((menuProgress - 0.1) / 0.9).clamp(0.0, 1.0);
+    }
+
+    // Apply easing curve safely
+    final easedProgress = Curves.easeOutBack.transform(itemProgress);
+    final safeOpacity = easedProgress.clamp(0.0, 1.0);
+    final safeScale = (0.3 + (easedProgress * 0.7)).clamp(0.3, 1.0);
+    final safeTranslateY = ((1.0 - easedProgress) * 30.0).clamp(0.0, 30.0);
+
+    return AnimatedContainer(
+      duration: Duration(milliseconds: (300 + delay).round()),
+      curve: Curves.easeOutBack,
+      transform: Matrix4.translationValues(0, safeTranslateY, 0),
+      child: Transform.scale(
+        scale: safeScale,
+        child: Opacity(
+          opacity: safeOpacity,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 6),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 6,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.95),
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: safeOpacity > 0.3
+                        ? [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.1),
+                              blurRadius: 8,
+                              offset: const Offset(0, 2),
+                            ),
+                          ]
+                        : [],
+                  ),
+                  child: Text(
+                    label,
+                    style: GoogleFonts.poppins(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      color: AppColors.colorsBlue,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                GestureDetector(
+                  onTap: onTap,
+                  behavior: HitTestBehavior.opaque,
+                  child: Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: AppColors.colorsBlue,
+                      borderRadius: BorderRadius.circular(30),
+                      boxShadow: safeOpacity > 0.3
+                          ? [
+                              BoxShadow(
+                                color: AppColors.colorsBlue.withOpacity(0.3),
+                                blurRadius: 8,
+                                offset: const Offset(0, 4),
+                              ),
+                            ]
+                          : [],
+                    ),
+                    child: Icon(icon, color: Colors.white, size: 24),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  } // Popup Item Builder
+}
