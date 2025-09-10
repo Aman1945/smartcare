@@ -99,36 +99,36 @@ class _HomePageState extends State<HomePage> {
                               Activities(),
 
                               // BottomBtnSecond(key: _bottomBtnSecondKey),
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                  left: 10.0,
-                                  right: 10.0,
-                                ),
-                                child: Row(
-                                  // mainAxisAlignment:
-                                  //     MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      'Performance Analysis',
-                                      style: AppFont.appbarfontgrey(context),
-                                    ),
-                                    // IconButton(
-                                    //   onPressed: () {
-                                    //     setState(() {
-                                    //       // _isHidden = !_isHidden;
-                                    //     });
-                                    //   },
-                                    //   icon: Icon(
-                                    //     // // _isHidden
-                                    //     //     ? Icons.keyboard_arrow_down_rounded
-                                    //     //     : Icons.keyboard_arrow_up_rounded,
-                                    //     // size: 35,
-                                    //     // color: AppColors.iconGrey,
-                                    //   ),
-                                    // ),
-                                  ],
-                                ),
-                              ),
+                              // Padding(
+                              //   padding: const EdgeInsets.only(
+                              //     left: 10.0,
+                              //     right: 10.0,
+                              //   ),
+                              //   child: Row(
+                              //     // mainAxisAlignment:
+                              //     //     MainAxisAlignment.spaceBetween,
+                              //     children: [
+                              //       Text(
+                              //         'Performance Analysis',
+                              //         style: AppFont.appbarfontgrey(context),
+                              //       ),
+                              //       // IconButton(
+                              //       //   onPressed: () {
+                              //       //     setState(() {
+                              //       //       // _isHidden = !_isHidden;
+                              //       //     });
+                              //       //   },
+                              //       //   icon: Icon(
+                              //       //     // // _isHidden
+                              //       //     //     ? Icons.keyboard_arrow_down_rounded
+                              //       //     //     : Icons.keyboard_arrow_up_rounded,
+                              //       //     // size: 35,
+                              //       //     // color: AppColors.iconGrey,
+                              //       //   ),
+                              //       // ),
+                              //     ],
+                              //   ),
+                              // ),
 
                               // if (!_isHidden) ...[const BottomBtnThird()],
                               const SizedBox(height: 10),

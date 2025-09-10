@@ -64,36 +64,24 @@ class _ActivitiesState extends State<Activities> {
     switch (_currentMainTab) {
       case 0:
         newWidget = _childButtonIndex == 0
-            ? UpcomingFollowups(
-                // refreshDashboard: widget.refreshDashboard,
-                // upcomingFollowups: widget.upcomingFollowups,
-                isNested: false,
-                upcomingFollowups: [],
-                refreshDashboard: () async {},
-              )
-            : OverdueFollowups(
-                // refreshDashboard: widget.refreshDashboard,
-                // upcomingFollowups: widget.overdueFollowups,
-                isNested: false,
-                upcomingFollowups: [],
-                refreshDashboard: () async {},
-              );
+            ? UpcomingFollowups()
+            : OverdueFollowups();
         break;
       case 1:
         newWidget = _childButtonIndex == 0
             ? UpcomingServiceapp(
-                // refreshDashboard: widget.refreshDashboard,
+                // refreshDashboard: widget.refreshDasJhboard,
                 // upcomingFollowups: widget.upcomingAppointments,
-                isNested: false,
-                upcomingFollowups: [],
-                refreshDashboard: () async {},
+                // isNested: false,
+                // upcomingFollowups: [],
+                // refreshDashboard: () async {},
               )
             : OverdueServicesapp(
                 // refreshDashboard: widget.refreshDashboard,
                 // upcomingFollowups: widget.overdueAppointments,
-                isNested: false,
-                upcomingFollowups: [],
-                refreshDashboard: () async {},
+                // isNested: false,
+                // upcomingFollowups: [],
+                // refreshDashboard: () async {},
               );
         break;
 
@@ -163,7 +151,7 @@ class _ActivitiesState extends State<Activities> {
           duration: const Duration(milliseconds: 200),
           child: _currentWidget ?? const SizedBox(height: 10),
         ),
-        _buildNavigationArrow(context),
+        // _buildNavigationArrow(context),
       ],
     );
   }
@@ -256,45 +244,105 @@ class _ActivitiesState extends State<Activities> {
     final overdueCount = _getOverdueCount();
 
     return Expanded(
-      child: TextButton(
-        onPressed: () => _changeSubTab(index),
-        style: TextButton.styleFrom(
-          backgroundColor: isActive
-              ? (index == 0
-                    ? AppColors.headerBlackTheme
-                    : const Color(0xFFFFF5F4))
-              : Colors.transparent,
-          foregroundColor: isActive ? Colors.white : Colors.black,
-          padding: EdgeInsets.symmetric(
-            vertical: 5.0 * _getResponsiveScale(),
-            horizontal: 8.0 * _getResponsiveScale(),
+      child: Container(
+        margin: EdgeInsets.all(2),
+        child: TextButton(
+          onPressed: () => _changeSubTab(index),
+          style: TextButton.styleFrom(
+            backgroundColor: isActive
+                ? (index == 0
+                      ? AppColors
+                            .headerBlackTheme // ✅ Green for Upcoming
+                      : AppColors.sideRed)
+                : Colors.transparent,
+            foregroundColor: isActive ? Colors.white : Colors.black,
+            // padding: EdgeInsets.symmetric(
+            //   vertical: 5.0 * _getResponsiveScale(),
+            //   horizontal: 8.0 * _getResponsiveScale(),
+            // ),
+            padding: EdgeInsets.zero,
+            side: BorderSide(
+              color: isActive
+                  ? (index == 0 ? AppColors.borderGreen : AppColors.borderRed)
+                  : Colors.transparent,
+              width: 1,
+            ),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(
+                5,
+              ), // ✅ Sharp edges like your first design
+            ),
           ),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-        ),
-        child: FittedBox(
-          fit: BoxFit.scaleDown,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                title,
-                style: GoogleFonts.poppins(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                  color: isActive
-                      ? (index == 0
-                            ? AppColors.white
-                            : AppColors.headerBlackTheme)
-                      : const Color(0xff000000).withOpacity(0.56),
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  padding: EdgeInsets.all(3),
+                  child: Text(
+                    title,
+                    style: GoogleFonts.montserrat(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                      color: isActive
+                          ? Colors
+                                .white // ✅ White text on both active tabs
+                          : const Color(0xff000000).withOpacity(0.56),
+                    ),
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
     );
   }
+
+  // Widget _buildSubTabButton(String title, int index, {bool showCount = false}) {
+  //   final isActive = _childButtonIndex == index;
+  //   final overdueCount = _getOverdueCount();
+
+  //   return Expanded(
+  //     child: TextButton(
+  //       onPressed: () => _changeSubTab(index),
+  //       style: TextButton.styleFrom(
+  //         // Use the same dark color for both tabs when active
+  //         backgroundColor: isActive
+  //             ? AppColors.headerBlackTheme
+  //             : Colors.transparent,
+  //         foregroundColor: isActive ? Colors.white : Colors.black,
+  //         padding: EdgeInsets.symmetric(
+  //           vertical: 5.0 * _getResponsiveScale(),
+  //           horizontal: 8.0 * _getResponsiveScale(),
+  //         ),
+  //         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+  //       ),
+  //       child: FittedBox(
+  //         fit: BoxFit.scaleDown,
+  //         child: Row(
+  //           mainAxisAlignment: MainAxisAlignment.start,
+  //           mainAxisSize: MainAxisSize.min,
+  //           children: [
+  //             Text(
+  //               title,
+  //               style: GoogleFonts.poppins(
+  //                 fontSize: 14,
+  //                 fontWeight: FontWeight.w500,
+  //                 // Use white text for both active tabs
+  //                 color: isActive
+  //                     ? AppColors.white
+  //                     : const Color(0xff000000).withOpacity(0.56),
+  //               ),
+  //             ),
+  //           ],
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  // }
 
   bool _showText = false;
   Timer? _toggleTimer;
@@ -307,56 +355,6 @@ class _ActivitiesState extends State<Activities> {
         });
       }
     });
-  }
-
-  Widget _buildNavigationArrow(BuildContext context) {
-    final scale = _getResponsiveScale();
-    final fontSize = 12.0 * scale; // Base: 12px
-    final iconSize = 36.0 * scale; // Base: 36px
-    final containerHeight = 40.0 * scale;
-    final containerWidth = 100.0 * scale;
-
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: _getResponsivePadding()),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          GestureDetector(
-            onTap: () {},
-            child: Container(
-              height: containerHeight,
-              width: containerWidth,
-              child: AnimatedSwitcher(
-                duration: const Duration(milliseconds: 400),
-                transitionBuilder: (child, animation) {
-                  return FadeTransition(
-                    opacity: animation,
-                    child: ScaleTransition(scale: animation, child: child),
-                  );
-                },
-                child: _showText
-                    ? Text(
-                        "See more",
-                        key: const ValueKey('text'),
-                        textAlign: TextAlign.center,
-                        style: GoogleFonts.poppins(
-                          fontSize: fontSize,
-                          color: AppColors.fontColor,
-                          fontWeight: FontWeight.w400,
-                        ),
-                      )
-                    : Icon(
-                        Icons.keyboard_arrow_down_rounded,
-                        key: const ValueKey('icon'),
-                        size: iconSize,
-                        color: AppColors.fontColor,
-                      ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
   }
 
   int _getOverdueCount() {
