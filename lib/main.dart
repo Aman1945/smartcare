@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:smartcare/pages/bottom_bar_page.dart'; 
+import 'package:smartcare/pages/aman.dart';
+import 'package:smartcare/pages/bottom_bar_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -24,6 +25,7 @@ class MyApp extends StatelessWidget {
         ),
         debugShowCheckedModeBanner: false,
         home: BottomNavigation(),
+        // home: Aman(),
       ),
     );
   }

@@ -69,20 +69,8 @@ class _ActivitiesState extends State<Activities> {
         break;
       case 1:
         newWidget = _childButtonIndex == 0
-            ? UpcomingServiceapp(
-                // refreshDashboard: widget.refreshDasJhboard,
-                // upcomingFollowups: widget.upcomingAppointments,
-                // isNested: false,
-                // upcomingFollowups: [],
-                // refreshDashboard: () async {},
-              )
-            : OverdueServicesapp(
-                // refreshDashboard: widget.refreshDashboard,
-                // upcomingFollowups: widget.overdueAppointments,
-                // isNested: false,
-                // upcomingFollowups: [],
-                // refreshDashboard: () async {},
-              );
+            ? UpcomingServiceapp()
+            : OverdueServicesapp();
         break;
 
       default:

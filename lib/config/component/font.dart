@@ -100,7 +100,7 @@ class AppFont {
     return GoogleFonts.montserrat(
       fontSize: scaleFont(context, fontSize),
       color: color,
-      fontWeight: FontWeight.w600,
+      fontWeight: FontWeight.w700,
     );
   }
 

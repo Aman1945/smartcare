@@ -140,7 +140,11 @@ class _DummyFollowupItemState extends State<DummyFollowupItem>
       onTap: () {
         print("Tapped on ${widget.name}");
       },
-      child: _buildFollowupCard(context),
+      child: Container(
+        margin: EdgeInsets.all(5),
+        decoration: BoxDecoration(),
+        child: _buildFollowupCard(context),
+      ),
     );
   }
 
@@ -158,28 +162,12 @@ class _DummyFollowupItemState extends State<DummyFollowupItem>
             icon: Icons.notifications,
             hasBorderRadius: true,
           ),
-          // SlidableAction(
-          //   onPressed: (context) =>
-          //       () {}, //showReminderPopup(context, widget.name),
-          //   backgroundColor: Colors.redAccent,
-          //   foregroundColor: Colors.white,
-          //   icon: Icons.notifications,
-          //   borderRadius: const BorderRadius.only(
-          //     topLeft: Radius.circular(16),
-          //     bottomLeft: Radius.circular(16),
-          //   ),
-          // ),
+
           ReusableSlidableAction(
             onPressed: () {},
             backgroundColor: AppColors.starColorsYellow,
             icon: Icons.star_rounded,
           ),
-          // const SlidableAction(
-          //   onPressed: null,
-          //   backgroundColor: Color(0xFFFFD641),
-          //   foregroundColor: Colors.white,
-          //   icon: Icons.star_rounded,
-          // ),
         ],
       ),
       endActionPane: ActionPane(
@@ -192,37 +180,25 @@ class _DummyFollowupItemState extends State<DummyFollowupItem>
             icon: Icons.phone,
             hasBorderRadius: false,
           ),
-          // SlidableAction(
-          //   onPressed: null,
-          //   backgroundColor: Color(0xFF36D399), // green
-          //   foregroundColor: Colors.white,
-          //   icon: Icons.phone,
-          // ),
           ReusableSlidableActionRight(
             onPressed: () {},
             backgroundColor: AppColors.headerBlackTheme,
             icon: Icons.edit,
             hasBorderRadius: true,
           ),
-          // SlidableAction(
-          //   onPressed: null,
-          //   backgroundColor: Color(0xFF212E51), // navy
-          //   foregroundColor: Colors.white,
-          //   icon: Icons.edit,
-          //   borderRadius: BorderRadius.only(
-          //     topRight: Radius.circular(16), // curved end cap
-          //     bottomRight: Radius.circular(16),
-          //   ),
-          // ),
         ],
       ),
 
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
         decoration: BoxDecoration(
-          color: Color(0xFFF7F8FC),
-          borderRadius: BorderRadius.circular(5),
+          color: _isActionPaneOpen
+              ? AppColors.backgroundLightGrey
+              : Colors.transparent,
+          // color: Color(0xFFF7F8FC),
+          // borderRadius: BorderRadius.circular(5),
         ),
+
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [

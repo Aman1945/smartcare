@@ -5,6 +5,7 @@ import 'package:smartcare/config/component/colors.dart';
 import 'package:smartcare/config/component/font.dart';
 import 'package:smartcare/config/getx/fabcontroller.dart';
 import 'package:smartcare/widgets/activities.dart';
+import 'package:smartcare/widgets/analytics/analytics_bottom.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -117,7 +118,7 @@ class _HomePageState extends State<HomePage> {
                                 ],
                               ),
 
-                              //  const BottomBtnThird(),
+                              // const AnalyticsBottom(),
                               const SizedBox(height: 10),
                             ],
                           ),
@@ -126,28 +127,28 @@ class _HomePageState extends State<HomePage> {
                 ),
 
                 // Replace your current Positioned widget with:
-                Obx(
-                  () => AnimatedPositioned(
-                    duration: const Duration(milliseconds: 300),
-                    curve: Curves.easeInOut,
-                    bottom: fabController.isFabVisible.value ? 26 : -80,
-                    right: 18,
-                    child: AnimatedOpacity(
-                      duration: const Duration(milliseconds: 300),
-                      opacity: fabController.isFabVisible.value ? 1.0 : 0.0,
-                      child: _buildFloatingActionButton(context),
-                    ),
-                  ),
-                ),
+                // Obx(
+                //   () => AnimatedPositioned(
+                //     duration: const Duration(milliseconds: 300),
+                //     curve: Curves.easeInOut,
+                //     bottom: fabController.isFabVisible.value ? 26 : -80,
+                //     right: 18,
+                //     child: AnimatedOpacity(
+                //       duration: const Duration(milliseconds: 300),
+                //       opacity: fabController.isFabVisible.value ? 1.0 : 0.0,
+                //       child: _buildFloatingActionButton(context),
+                //     ),
+                //   ),
+                // ),
 
-                // Update your popup menu condition:
-                Obx(
-                  () =>
-                      fabController.isFabExpanded.value &&
-                          fabController.isFabVisible.value
-                      ? _buildPopupMenu(context)
-                      : const SizedBox.shrink(),
-                ),
+                // // Update your popup menu condition:
+                // Obx(
+                //   () =>
+                //       fabController.isFabExpanded.value &&
+                //           fabController.isFabVisible.value
+                //       ? _buildPopupMenu(context)
+                //       : const SizedBox.shrink(),
+                // ),
               ],
             ),
           ),
@@ -239,7 +240,7 @@ class _HomePageState extends State<HomePage> {
           children: [
             // Simple background overlay without animation
             Positioned.fill(
-              child: Container(color: Colors.black.withOpacity(0.7)),
+              child: Container(color: Colors.black.withOpacity(0.8)),
             ),
 
             // Popup Items Container with safe animation
@@ -263,8 +264,8 @@ class _HomePageState extends State<HomePage> {
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
                             _buildSafePopupItem(
-                              Icons.calendar_month_outlined,
-                              "Appointment",
+                              Icons.call,
+                              "Followup",
                               0,
                               menuValue,
                               onTap: () {
@@ -273,8 +274,8 @@ class _HomePageState extends State<HomePage> {
                               },
                             ),
                             _buildSafePopupItem(
-                              Icons.person_search,
-                              "Enquiry",
+                              Icons.calendar_month_outlined,
+                              "Appointment",
                               1,
                               menuValue,
                               onTap: () {
@@ -283,23 +284,13 @@ class _HomePageState extends State<HomePage> {
                               },
                             ),
                             _buildSafePopupItem(
-                              Icons.call,
-                              "Followup",
+                              Icons.more_time_rounded,
+                              "Reminders",
                               2,
                               menuValue,
                               onTap: () {
                                 fabController.closeFab();
                                 // _showFollowupPopup(context);
-                              },
-                            ),
-                            _buildSafePopupItem(
-                              Icons.directions_car,
-                              "Test Drive",
-                              3,
-                              menuValue,
-                              onTap: () {
-                                fabController.closeFab();
-                                // _showTestdrivePopup(context);
                               },
                             ),
                           ],
@@ -365,25 +356,13 @@ class _HomePageState extends State<HomePage> {
                     horizontal: 12,
                     vertical: 6,
                   ),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.95),
-                    borderRadius: BorderRadius.circular(20),
-                    boxShadow: safeOpacity > 0.3
-                        ? [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.1),
-                              blurRadius: 8,
-                              offset: const Offset(0, 2),
-                            ),
-                          ]
-                        : [],
-                  ),
+
                   child: Text(
                     label,
-                    style: GoogleFonts.poppins(
+                    style: GoogleFonts.montserrat(
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
-                      color: AppColors.headerBlackTheme,
+                      color: AppColors.white,
                     ),
                   ),
                 ),
