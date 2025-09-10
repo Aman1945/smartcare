@@ -196,8 +196,8 @@ class _ActivitiesState extends State<Activities> {
             Container(
               height: 2,
               width: title == 'Service Appointments'
-                  ? 80
-                  : 50, // Adjust width for longer text
+                  ? 30
+                  : 30, // Adjust width for longer text
               color: isActive ? AppColors.headerBlackTheme : Colors.transparent,
             ),
           ],

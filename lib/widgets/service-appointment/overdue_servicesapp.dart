@@ -273,7 +273,7 @@ class _DummyFollowupItemState extends State<DummyFollowupItem>
       child: Container(
         padding: const EdgeInsets.all(3),
         decoration: BoxDecoration(
-          color: AppColors.arrowContainerColor,
+          color: Color(0xFF536381).withOpacity(.3),
           borderRadius: BorderRadius.circular(30),
         ),
         child: Icon(

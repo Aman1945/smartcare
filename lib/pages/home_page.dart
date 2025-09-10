@@ -97,40 +97,27 @@ class _HomePageState extends State<HomePage> {
 
                               // const SizedBox(height: 3),
                               Activities(),
-
+                              SizedBox(height: 10),
                               // BottomBtnSecond(key: _bottomBtnSecondKey),
-                              // Padding(
-                              //   padding: const EdgeInsets.only(
-                              //     left: 10.0,
-                              //     right: 10.0,
-                              //   ),
-                              //   child: Row(
-                              //     // mainAxisAlignment:
-                              //     //     MainAxisAlignment.spaceBetween,
-                              //     children: [
-                              //       Text(
-                              //         'Performance Analysis',
-                              //         style: AppFont.appbarfontgrey(context),
-                              //       ),
-                              //       // IconButton(
-                              //       //   onPressed: () {
-                              //       //     setState(() {
-                              //       //       // _isHidden = !_isHidden;
-                              //       //     });
-                              //       //   },
-                              //       //   icon: Icon(
-                              //       //     // // _isHidden
-                              //       //     //     ? Icons.keyboard_arrow_down_rounded
-                              //       //     //     : Icons.keyboard_arrow_up_rounded,
-                              //       //     // size: 35,
-                              //       //     // color: AppColors.iconGrey,
-                              //       //   ),
-                              //       // ),
-                              //     ],
-                              //   ),
-                              // ),
+                              Row(
+                                // mainAxisAli
+                                children: [
+                                  Container(
+                                    margin: EdgeInsets.symmetric(
+                                      horizontal: 10,
+                                    ),
+                                    child: Text(
+                                      'Analytics for Service Dashboard',
+                                      textAlign: TextAlign.left,
+                                      style: AppFont.appbarfontmedium14Bold(
+                                        context,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
 
-                              // if (!_isHidden) ...[const BottomBtnThird()],
+                              //  const BottomBtnThird(),
                               const SizedBox(height: 10),
                             ],
                           ),
@@ -139,19 +126,19 @@ class _HomePageState extends State<HomePage> {
                 ),
 
                 // Replace your current Positioned widget with:
-                // Obx(
-                //   () => AnimatedPositioned(
-                //     duration: const Duration(milliseconds: 300),
-                //     curve: Curves.easeInOut,
-                //     bottom: fabController.isFabVisible.value ? 26 : -80,
-                //     right: 18,
-                //     child: AnimatedOpacity(
-                //       duration: const Duration(milliseconds: 300),
-                //       opacity: fabController.isFabVisible.value ? 1.0 : 0.0,
-                //       child: _buildFloatingActionButton(context),
-                //     ),
-                //   ),
-                // ),
+                Obx(
+                  () => AnimatedPositioned(
+                    duration: const Duration(milliseconds: 300),
+                    curve: Curves.easeInOut,
+                    bottom: fabController.isFabVisible.value ? 26 : -80,
+                    right: 18,
+                    child: AnimatedOpacity(
+                      duration: const Duration(milliseconds: 300),
+                      opacity: fabController.isFabVisible.value ? 1.0 : 0.0,
+                      child: _buildFloatingActionButton(context),
+                    ),
+                  ),
+                ),
 
                 // Update your popup menu condition:
                 Obx(
@@ -207,7 +194,7 @@ class _HomePageState extends State<HomePage> {
                         //     :
                         (fabController.isFabExpanded.value
                         ? Colors.red
-                        : AppColors.colorsBlue),
+                        : AppColors.headerBlackTheme),
                     shape: BoxShape.circle,
                   ),
                   child: Center(
@@ -396,7 +383,7 @@ class _HomePageState extends State<HomePage> {
                     style: GoogleFonts.poppins(
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
-                      color: AppColors.colorsBlue,
+                      color: AppColors.headerBlackTheme,
                     ),
                   ),
                 ),
@@ -407,12 +394,14 @@ class _HomePageState extends State<HomePage> {
                   child: Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: AppColors.colorsBlue,
+                      color: AppColors.headerBlackTheme,
                       borderRadius: BorderRadius.circular(30),
                       boxShadow: safeOpacity > 0.3
                           ? [
                               BoxShadow(
-                                color: AppColors.colorsBlue.withOpacity(0.3),
+                                color: AppColors.headerBlackTheme.withOpacity(
+                                  0.3,
+                                ),
                                 blurRadius: 8,
                                 offset: const Offset(0, 4),
                               ),

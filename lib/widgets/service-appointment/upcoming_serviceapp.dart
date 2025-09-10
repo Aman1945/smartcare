@@ -50,7 +50,7 @@ class UpcomingServiceapp extends StatelessWidget {
           // padding: EdgeInsets.all(5),
           margin: EdgeInsets.symmetric(horizontal: 10),
           decoration: BoxDecoration(
-            color: AppColors.backgroundLightGrey,
+            color: Color(0xFFF7F8FC),
             borderRadius: BorderRadius.circular(5),
           ),
           child: ListView.builder(
@@ -220,7 +220,7 @@ class _DummyFollowupItemState extends State<DummyFollowupItem>
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
         decoration: BoxDecoration(
-          color: AppColors.containerBg,
+          color: Color(0xFFF7F8FC),
           borderRadius: BorderRadius.circular(5),
         ),
         child: Row(
@@ -273,9 +273,11 @@ class _DummyFollowupItemState extends State<DummyFollowupItem>
       child: Container(
         padding: const EdgeInsets.all(3),
         decoration: BoxDecoration(
-          color: AppColors.arrowContainerColor,
+          color: Color(0xFF536381).withOpacity(.3),
           borderRadius: BorderRadius.circular(30),
         ),
+        //  color: Color(0xFF536381),
+        // #536381
         child: Icon(
           _isActionPaneOpen
               ? Icons.arrow_forward_ios_rounded

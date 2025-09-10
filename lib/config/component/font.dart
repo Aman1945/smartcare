@@ -474,7 +474,7 @@ class AppFont {
 
   static TextStyle appbarfontmedium14Bold(
     BuildContext context, {
-    double fontSize = 18,
+    double fontSize = 16,
     Color color = AppColors.headerBlackTheme,
   }) {
     return GoogleFonts.montserrat(
