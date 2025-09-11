@@ -15,7 +15,7 @@ class NavigationController extends GetxController {
     // Base screens that everyone sees
     List<Widget> baseScreens = [
       HomePage(),
-      CalendarPage(userId: '', userName: ''),
+      CalendarPage(),
       // SettingsPage(),
       FollowupsDetails(),
       AppointmentPage(),

@@ -28,16 +28,16 @@ class _CalendarWithTimelineState extends State<AppointmentPage> {
         "name": "Rahul Sharma",
         "task": "Followup",
         "location": "Kanchpada, Malad West, India - 400064",
-        "color": "#4DA6FF" // blue
-      }
+        "color": "#4DA6FF", // blue
+      },
     ],
     "15:00": [
       {
         "name": "Rahul Sharma",
         "task": "Scheduled Maintenance",
         "location": "Kanchpada, Malad West, India - 400064",
-        "color": "#A674D4" // purple
-      }
+        "color": "#A674D4", // purple
+      },
     ],
   };
 
@@ -168,8 +168,10 @@ class _CalendarWithTimelineState extends State<AppointmentPage> {
                 final tasks = _timelineData[slotKey] ?? [];
 
                 return Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 6,
+                  ),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -190,8 +192,8 @@ class _CalendarWithTimelineState extends State<AppointmentPage> {
                         child: Column(
                           children: tasks.isNotEmpty
                               ? tasks
-                                  .map((task) => _buildTimelineCard(task))
-                                  .toList()
+                                    .map((task) => _buildTimelineCard(task))
+                                    .toList()
                               : [const SizedBox(height: 30)], // empty gap
                         ),
                       ),
@@ -208,8 +210,9 @@ class _CalendarWithTimelineState extends State<AppointmentPage> {
 
   Widget _buildTimelineCard(Map<String, String> task) {
     final String taskType = task["task"] ?? "";
-    final Color barColor =
-        Color(int.parse(task["color"]!.replaceAll("#", "0xFF")));
+    final Color barColor = Color(
+      int.parse(task["color"]!.replaceAll("#", "0xFF")),
+    );
 
     // Custom background colors for each task type
     final Color cardColor;
@@ -260,7 +263,7 @@ class _CalendarWithTimelineState extends State<AppointmentPage> {
                     task["task"]!,
                     style: GoogleFonts.montserrat(
                       fontSize: 14,
-                       fontWeight: FontWeight.w700,
+                      fontWeight: FontWeight.w700,
                       color: Colors.black,
                     ),
                   ),
@@ -269,7 +272,7 @@ class _CalendarWithTimelineState extends State<AppointmentPage> {
                     task["location"]!,
                     style: GoogleFonts.montserrat(
                       fontSize: 11,
-                 fontWeight: FontWeight.w400,
+                      fontWeight: FontWeight.w400,
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
