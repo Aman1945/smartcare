@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:smartcare/config/component/colors.dart';
+import 'package:smartcare/config/component/font.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
@@ -51,17 +53,16 @@ class _CalendarWithTimelineState extends State<AppointmentPage> {
 
       // AppBar
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        title: Text(
-          "Smart Care",
-          style: GoogleFonts.montserrat(
-            fontSize: 22,
-            fontWeight: FontWeight.w700,
-            color: const Color(0xFF22215B),
+        automaticallyImplyLeading: false,
+        backgroundColor: AppColors.white,
+        title: Align(
+          alignment: Alignment.centerLeft,
+          child: Text(
+            'smartcare',
+            textAlign: TextAlign.left,
+            style: AppFont.appbarfontblack(context),
           ),
         ),
-        centerTitle: false,
       ),
 
       body: Column(

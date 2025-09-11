@@ -35,7 +35,7 @@ class _HomePageState extends State<HomePage> {
               title: Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  'smartcare',
+                  'smart care',
                   textAlign: TextAlign.left,
                   style: AppFont.appbarfontblack(context),
                 ),

@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:smartcare/config/component/colors.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:smartcare/config/component/font.dart';
 
 class CalendarPage extends StatefulWidget {
   const CalendarPage({super.key});
@@ -353,15 +354,14 @@ class _CallAnalyticsState extends State<CalendarPage> {
     return Scaffold(
       backgroundColor: AppColors.white,
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
         automaticallyImplyLeading: false,
-        title: const Text(
-          'smart care',
-          style: TextStyle(
-            fontSize: 24,
-            fontWeight: FontWeight.w700,
-            color: Color(0xFF1a1a1a),
+        backgroundColor: AppColors.white,
+        title: Align(
+          alignment: Alignment.centerLeft,
+          child: Text(
+            'smart care',
+            textAlign: TextAlign.left,
+            style: AppFont.appbarfontblack(context),
           ),
         ),
       ),

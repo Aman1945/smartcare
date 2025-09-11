@@ -268,29 +268,16 @@ class _FollowupsDetailsState extends State<FollowupsDetails> {
     return Scaffold(
       backgroundColor: AppColors.backgroundLightGrey,
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: AppColors.white,
         title: Align(
           alignment: Alignment.centerLeft,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Follow-ups',
-                style: AppFont.appbarfontmedium14Bold(context),
-              ),
-            ],
+          child: Text(
+            'smart care',
+            textAlign: TextAlign.left,
+            style: AppFont.appbarfontblack(context),
           ),
         ),
-        leading: IconButton(
-          icon: const Icon(
-            Icons.arrow_back_ios_new_outlined,
-            color: AppColors.headerBlackTheme,
-          ),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-        elevation: 0,
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -602,6 +589,7 @@ class _FollowupsDetailsState extends State<FollowupsDetails> {
       ),
     );
   }
+  
 }
 
 // import 'dart:convert';
