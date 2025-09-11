@@ -460,6 +460,18 @@ class AppFont {
     );
   }
 
+  static TextStyle appbarfontmedium12Theme(
+    BuildContext context, {
+    double fontSize = 12,
+    Color color = AppColors.headerBlackTheme,
+  }) {
+    return GoogleFonts.montserrat(
+      fontSize: scaleFont(context, fontSize),
+      color: color,
+      fontWeight: FontWeight.w500,
+    );
+  }
+
   static TextStyle appbarfontmedium14(
     BuildContext context, {
     double fontSize = 16,
@@ -469,6 +481,18 @@ class AppFont {
       fontSize: scaleFont(context, fontSize),
       color: color,
       fontWeight: FontWeight.w500,
+    );
+  }
+
+  static TextStyle appbarfontsmallnewtheme(
+    BuildContext context, {
+    double fontSize = 12,
+    Color color = AppColors.headerBlackTheme,
+  }) {
+    return GoogleFonts.montserrat(
+      fontSize: scaleFont(context, fontSize),
+      color: color,
+      fontWeight: FontWeight.w400,
     );
   }
 

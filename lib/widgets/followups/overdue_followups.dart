@@ -140,7 +140,12 @@ class _DummyFollowupItemState extends State<DummyFollowupItem>
       onTap: () {
         print("Tapped on ${widget.name}");
       },
-      child: _buildFollowupCard(context),
+      child:  Container(
+        margin: EdgeInsets.all(5),
+        decoration: BoxDecoration(),
+        child: _buildFollowupCard(context),
+      )
+      //  _buildFollowupCard(context),
     );
   }
 
