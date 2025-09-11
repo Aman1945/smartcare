@@ -4,6 +4,7 @@ import 'package:smartcare/pages/appointment_page.dart';
 import 'package:smartcare/pages/calendar_page.dart';
 import 'package:smartcare/pages/home_page.dart';
 import 'package:smartcare/pages/settings_page.dart';
+import 'package:smartcare/pages/single_enquiry.dart';
 
 class NavigationController extends GetxController {
   var selectedIndex = 0.obs;
@@ -14,8 +15,9 @@ class NavigationController extends GetxController {
     // Base screens that everyone sees
     List<Widget> baseScreens = [
       HomePage(),
-      CalendarPage(userId: '', userName: 'Abhey Dayal',),
-      SettingsPage(),
+      CalendarPage(userId: '', userName: ''),
+      // SettingsPage(),
+      FollowupsDetails(),
       AppointmentPage(),
     ];
 

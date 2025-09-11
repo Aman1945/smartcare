@@ -15,30 +15,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  // @override
-  // Widget build(BuildContext context) {
-  //   return Scaffold(
-  //     appBar: AppBar(
-  //       title: Align(
-  //         alignment: Alignment.centerLeft,
-  //         child: Text(
-  //           'Smart Care',
-  //           textAlign: TextAlign.left,
-  //           style: AppFont.appbarfontblack(context),
-  //         ),
-  //       ),
-  //     ),
-  //     body: SingleChildScrollView(child: Column(children: [
-
-  //         ],
-  //       )),
-  //   );
-  // }
-
-  Future<void> onrefreshToggle() async {
-    // await fetchDashboardData(isRefresh: true);
-    // await uploadCallLogsAfterLogin();
-  }
+  Future<void> onrefreshToggle() async {}
   // Initialize the controller
   final FabController fabController = Get.put(FabController());
   @override
@@ -98,15 +75,13 @@ class _HomePageState extends State<HomePage> {
 
                               // const SizedBox(height: 3),
                               Activities(),
-                              SizedBox(height: 10),
+                              SizedBox(height: 15),
                               // BottomBtnSecond(key: _bottomBtnSecondKey),
                               Row(
                                 // mainAxisAli
                                 children: [
                                   Container(
-                                    margin: EdgeInsets.symmetric(
-                                      horizontal: 10,
-                                    ),
+                                    margin: EdgeInsets.only(left: 20),
                                     child: Text(
                                       'Analytics for Service Dashboard',
                                       textAlign: TextAlign.left,
@@ -118,7 +93,7 @@ class _HomePageState extends State<HomePage> {
                                 ],
                               ),
 
-                              // const AnalyticsBottom(),
+                              const AnalyticsCardsStatic(),
                               const SizedBox(height: 10),
                             ],
                           ),
@@ -127,28 +102,28 @@ class _HomePageState extends State<HomePage> {
                 ),
 
                 // Replace your current Positioned widget with:
-                // Obx(
-                //   () => AnimatedPositioned(
-                //     duration: const Duration(milliseconds: 300),
-                //     curve: Curves.easeInOut,
-                //     bottom: fabController.isFabVisible.value ? 26 : -80,
-                //     right: 18,
-                //     child: AnimatedOpacity(
-                //       duration: const Duration(milliseconds: 300),
-                //       opacity: fabController.isFabVisible.value ? 1.0 : 0.0,
-                //       child: _buildFloatingActionButton(context),
-                //     ),
-                //   ),
-                // ),
+                Obx(
+                  () => AnimatedPositioned(
+                    duration: const Duration(milliseconds: 300),
+                    curve: Curves.easeInOut,
+                    bottom: fabController.isFabVisible.value ? 26 : -80,
+                    right: 18,
+                    child: AnimatedOpacity(
+                      duration: const Duration(milliseconds: 300),
+                      opacity: fabController.isFabVisible.value ? 1.0 : 0.0,
+                      child: _buildFloatingActionButton(context),
+                    ),
+                  ),
+                ),
 
-                // // Update your popup menu condition:
-                // Obx(
-                //   () =>
-                //       fabController.isFabExpanded.value &&
-                //           fabController.isFabVisible.value
-                //       ? _buildPopupMenu(context)
-                //       : const SizedBox.shrink(),
-                // ),
+                // Update your popup menu condition:
+                Obx(
+                  () =>
+                      fabController.isFabExpanded.value &&
+                          fabController.isFabVisible.value
+                      ? _buildPopupMenu(context)
+                      : const SizedBox.shrink(),
+                ),
               ],
             ),
           ),

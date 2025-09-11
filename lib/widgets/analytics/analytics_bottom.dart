@@ -1,51 +1,50 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'dart:math' as math;
-
+import 'package:google_fonts/google_fonts.dart';
 import 'package:smartcare/config/component/colors.dart';
 
-// Data model for analytics
+// Data models
 class AnalyticsData {
   final String value;
   final String title;
   final String subtitle;
-  final String iconPath;
-  final Color badgeColor;
-  final IconData badgeIcon;
+  final String? iconPath;
+  // final Color badgeColor;
+  // final IconData badgeIcon;
   final Color badgeIconColor;
+  final String? svgPathLeft;
 
   AnalyticsData({
     required this.value,
     required this.title,
     required this.subtitle,
-    required this.iconPath,
-    required this.badgeColor,
-    required this.badgeIcon,
+    this.iconPath,
+    // required this.badgeColor,
+    // required this.badgeIcon,
     required this.badgeIconColor,
+    this.svgPathLeft,
   });
 }
 
-// Period data model
 class PeriodData {
-  final Map<String, AnalyticsData> data;
   final String bankValue;
+  final Map<String, AnalyticsData> data;
 
-  PeriodData({required this.data, required this.bankValue});
+  PeriodData({required this.bankValue, required this.data});
 }
 
-class AnalyticsBottom extends StatefulWidget {
-  const AnalyticsBottom({super.key});
+class AnalyticsCardsStatic extends StatefulWidget {
+  const AnalyticsCardsStatic({super.key});
 
   @override
-  State<AnalyticsBottom> createState() => _AnalyticsBottomState();
+  State<AnalyticsCardsStatic> createState() => _AnalyticsCardsStaticState();
 }
 
-class _AnalyticsBottomState extends State<AnalyticsBottom> {
-  int _currentMainTab = 0;
-  int _featuredTileIndex = 1; // Center tile (0=left, 1=center, 2=right)
-  int _periodIndex = 0; // 0=MTD, 1=QTD, 2=YTD
+class _AnalyticsCardsStaticState extends State<AnalyticsCardsStatic> {
+  int _periodIndex = 0;
 
-  // Static data for different periods
+  final List<String> _periodLabels = ['MTD', 'QTD', 'YTD'];
+
   final Map<int, PeriodData> _periodData = {
     0: PeriodData(
       // MTD
@@ -55,115 +54,98 @@ class _AnalyticsBottomState extends State<AnalyticsBottom> {
           value: '18',
           title: 'Service\nRequests\nopened',
           subtitle: '',
-          iconPath: 'assets/request.svg',
-          badgeColor: Color(0xFF36D399),
-          badgeIcon: Icons.check,
+          // badgeColor: Color(0xFF36D399),
+          // badgeIcon: Icons.check,
           badgeIconColor: Colors.white,
         ),
         'target': AnalyticsData(
           value: '15',
           title: 'You must pursue',
           subtitle: 'More Service task to\nachieve your target',
-          iconPath: 'assets/target.svg',
-          badgeColor: Colors.transparent,
-          badgeIcon: Icons.check,
+          // badgeColor: Colors.transparent,
+          // badgeIcon: Icons.check,
           badgeIconColor: Colors.white,
         ),
         'overdue': AnalyticsData(
           value: '3',
           title: 'Overdue',
           subtitle: '',
-          iconPath: 'assets/overdue.svg',
-          badgeColor: Color(0xFFFFC2C2),
-          badgeIcon: Icons.close,
+          // badgeColor: Color(0xFFFFC2C2),
+          // badgeIcon: Icons.close,
           badgeIconColor: Color(0xFFFA5A7D),
         ),
       },
     ),
     1: PeriodData(
       // QTD
-      bankValue: '10',
+      bankValue: '12',
       data: {
         'requests': AnalyticsData(
           value: '45',
           title: 'Service\nRequests\nopened',
           subtitle: '',
-          iconPath: 'assets/request.svg',
-          badgeColor: Color(0xFF36D399),
-          badgeIcon: Icons.check,
+          // badgeColor: Color(0xFF36D399),
+          // badgeIcon: Icons.check,
           badgeIconColor: Colors.white,
         ),
         'target': AnalyticsData(
           value: '25',
           title: 'You must pursue',
           subtitle: 'More Service task to\nachieve your target',
-          iconPath: 'assets/target.svg',
-          badgeColor: Colors.transparent,
-          badgeIcon: Icons.check,
+          // badgeColor: Colors.transparent,
+          // badgeIcon: Icons.check,
           badgeIconColor: Colors.white,
         ),
         'overdue': AnalyticsData(
           value: '8',
           title: 'Overdue',
           subtitle: '',
-          iconPath: 'assets/overdue.svg',
-          badgeColor: Color(0xFFFFC2C2),
-          badgeIcon: Icons.close,
+          // badgeColor: Color(0xFFFFC2C2),
+          // badgeIcon: Icons.close,
           badgeIconColor: Color(0xFFFA5A7D),
         ),
       },
     ),
     2: PeriodData(
       // YTD
-      bankValue: '15',
+      bankValue: '28',
       data: {
         'requests': AnalyticsData(
           value: '156',
           title: 'Service\nRequests\nopened',
           subtitle: '',
-          iconPath: 'assets/request.svg',
-          badgeColor: Color(0xFF36D399),
-          badgeIcon: Icons.check,
+          // badgeColor: Color(0xFF36D399),
+          // badgeIcon: Icons.check,
           badgeIconColor: Colors.white,
         ),
         'target': AnalyticsData(
           value: '42',
           title: 'You must pursue',
           subtitle: 'More Service task to\nachieve your target',
-          iconPath: 'assets/target.svg',
-          badgeColor: Colors.transparent,
-          badgeIcon: Icons.check,
+          // badgeColor: Colors.transparent,
+          // badgeIcon: Icons.check,
           badgeIconColor: Colors.white,
         ),
         'overdue': AnalyticsData(
           value: '12',
           title: 'Overdue',
           subtitle: '',
-          iconPath: 'assets/overdue.svg',
-          badgeColor: Color(0xFFFFC2C2),
-          badgeIcon: Icons.close,
+          // badgeColor: Color(0xFFFFC2C2),
+          // badgeIcon: Icons.close,
           badgeIconColor: Color(0xFFFA5A7D),
         ),
       },
     ),
   };
 
-  void _changeMainTab(int index) {
-    setState(() {
-      _currentMainTab = index;
-    });
-  }
-
-  void _changePeriod(int index) {
-    setState(() {
-      _periodIndex = index;
-    });
-  }
-
-  void _changeFeaturedTile(int index) {
-    setState(() {
-      _featuredTileIndex = index;
-    });
+  Widget _buildMainTabButtons() {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: _getResponsivePadding()),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [_buildTabButton('Service tasks', 0)],
+      ),
+    );
   }
 
   double _getResponsivePadding() {
@@ -182,36 +164,476 @@ class _AnalyticsBottomState extends State<AnalyticsBottom> {
 
   @override
   Widget build(BuildContext context) {
+    final currentData = _periodData[_periodIndex]!;
+
     return Column(
       children: [
         _buildMainTabButtons(),
-        const SizedBox(height: 20),
-        _buildPeriodButtons(),
-        const SizedBox(height: 20),
-        Expanded(child: _buildContent()),
+        // Header with period buttons and enquiry bank
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          child: Row(
+            children: [
+              // Period selection buttons
+              Row(
+                children: _periodLabels.asMap().entries.map((entry) {
+                  int index = entry.key;
+                  String label = entry.value;
+
+                  return Container(
+                    margin: EdgeInsets.only(
+                      right: index < _periodLabels.length - 1 ? 8 : 0,
+                    ),
+                    child: GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          _periodIndex = index;
+                        });
+                      },
+                      child: Container(
+                        margin: EdgeInsets.zero,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 2,
+                        ),
+                        decoration: BoxDecoration(
+                          color: _periodIndex == index
+                              ? const Color(0xFF1F2937)
+                              : Color(0xFFEFEEF9),
+                          borderRadius: BorderRadius.circular(20),
+                          border: Border.all(
+                            color: _periodIndex == index
+                                ? const Color(0xFF1F2937)
+                                : const Color(0xFFD1D5DB),
+                          ),
+                        ),
+                        child: Text(
+                          label,
+                          style: GoogleFonts.montserrat(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                            color: _periodIndex == index
+                                ? Colors.white
+                                : const Color(0xFF6B7280),
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
+                }).toList(),
+              ),
+
+              const Spacer(),
+
+              // Enquiry bank button
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 6,
+                ),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(
+                    color: AppColors.headerBlackTheme,
+                    width: 1,
+                  ),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      'Enquiry bank',
+                      style: GoogleFonts.montserrat(
+                        fontSize: 11,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.headerBlackTheme,
+                      ),
+                    ),
+                    const SizedBox(width: 6),
+                    Text(
+                      currentData.bankValue,
+                      style: GoogleFonts.montserrat(
+                        fontSize: 10,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.headerBlackTheme,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+
+        // Analytics cards
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          child: Row(
+            children: [
+              // Left Card - Service Requests
+              // Expanded(
+              //   flex: 28,
+              //   child: Container(
+              //     height: 120,
+              //     padding: const EdgeInsets.all(12),
+              //     decoration: BoxDecoration(
+              //       color: Colors.white,
+              //       borderRadius: BorderRadius.circular(16),
+              //       border: Border.all(
+              //         color: const Color(0xFFE5E7EB),
+              //         width: 1,
+              //       ),
+              //       boxShadow: [
+              //         BoxShadow(
+              //           color: Colors.black.withOpacity(0.04),
+              //           blurRadius: 6,
+              //           offset: const Offset(0, 2),
+              //         ),
+              //       ],
+              //     ),
+              //     child: Stack(
+              //       children: [
+              //         Column(
+              //           crossAxisAlignment: CrossAxisAlignment.start,
+              //           mainAxisAlignment: MainAxisAlignment.center,
+              //           children: [
+              //             Text(
+              //               currentData.data['requests']!.value,
+              //               style: GoogleFonts.montserrat(
+              //                 fontSize: 24,
+              //                 fontWeight: FontWeight.w700,
+              //                 color: const Color(0xFF1F2937),
+              //               ),
+              //             ),
+              //             const SizedBox(height: 4),
+              //             Text(
+              //               currentData.data['requests']!.title,
+              //               style: GoogleFonts.montserrat(
+              //                 fontSize: 10,
+              //                 fontWeight: FontWeight.w600,
+              //                 color: const Color(0xFF6B7280),
+              //                 height: 1.2,
+              //               ),
+              //             ),
+              //           ],
+              //         ),
+              //         Positioned(
+              //           top: 8,
+              //           right: 8,
+              //           child: Stack(
+              //             children: [
+              //               Container(
+              //                 // width: 24,
+              //                 // height: 24,
+              //                 decoration: BoxDecoration(
+              //                   border: Border.all(color: Colors.black),
+              //                   color: const Color(0xFFEFF6FF),
+              //                   borderRadius: BorderRadius.circular(6),
+              //                 ),
+              //                 child: const Icon(
+              //                   Icons.build_outlined,
+              //                   size: 14,
+              //                   color: Color(0xFF2563EB),
+              //                 ),
+              //               ),
+              //               Positioned(
+              //                 top: -1,
+              //                 right: -4,
+              //                 child: Container(
+              //                   width: 40,
+              //                   height: 40,
+              //                   decoration: BoxDecoration(
+              //                     shape: BoxShape.circle,
+              //                   ),
+              //                   child: SvgPicture.asset("assets/request.svg"),
+              //                 ),
+              //               ),
+              //               // Positioned(
+              //               //   top: -4,
+              //               //   right: -4,
+              //               //   child: Container(
+              //               //     width: 12,
+              //               //     height: 12,
+              //               //     decoration: BoxDecoration(
+              //               //       // color:
+              //               //       //     currentData.data['requests']!.badgeColor,
+              //               //       shape: BoxShape.circle,
+              //               //     ),
+              //               //     // child: Icon(
+              //               //     //   currentData.data['requests']!.badgeIcon,
+              //               //     //   size: 8,
+              //               //     //   color: currentData
+              //               //     //       .data['requests']!
+              //               //     //       .badgeIconColor,
+              //               //     // ),
+              //               //   ),
+              //               // ),
+              //             ],
+              //           ),
+              //         ),
+              //       ],
+              //     ),
+              //   ),
+              // ),
+              Expanded(
+                flex: 28,
+                child: Container(
+                  height: 120,
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(
+                      color: const Color(0xFFE5E7EB),
+                      width: 1,
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.04),
+                        blurRadius: 6,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: Stack(
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            // currentData.data['overdue']!.value,
+                            currentData.data['requests']!.value,
+                            style: GoogleFonts.montserrat(
+                              fontSize: 24,
+                              fontWeight: FontWeight.w700,
+                              color: AppColors.headerBlackTheme,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            currentData.data['requests']!.title,
+                            style: GoogleFonts.montserrat(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
+                              color: AppColors.headerBlackTheme,
+                            ),
+                          ),
+                        ],
+                      ),
+                      Positioned(
+                        top: -5,
+                        right: 1,
+                        child: Stack(
+                          children: [
+                            // Container(
+                            //   width: 24,
+                            //   height: 24,
+                            //   decoration: BoxDecoration(
+                            //     color: const Color(0xFFFEF2F2),
+                            //     borderRadius: BorderRadius.circular(6),
+                            //   ),
+                            //   child: const Icon(
+                            //     Icons.schedule_outlined,
+                            //     size: 14,
+                            //     color: Color(0xFFDC2626),
+                            //   ),
+                            // ),
+                            Positioned(
+                              // top: -4,
+                              // right: -4,
+                              child: Container(
+                                width: 32,
+                                height: 42,
+                                decoration: BoxDecoration(
+                                  // border: Border.all(color: Colors.black),
+                                  shape: BoxShape.circle,
+                                ),
+                                child: SvgPicture.asset("assets/request.svg"),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+
+              const SizedBox(width: 8),
+
+              // Center Card - Target (Bigger)
+              Expanded(
+                flex: 44,
+                child: Container(
+                  height: 180,
+                  padding: const EdgeInsets.only(top: 16, left: 10),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(
+                      color: const Color(0xFFD1D5DB),
+                      width: 1,
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.08),
+                        blurRadius: 12,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  child: Stack(
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            currentData.data['target']!.title,
+                            style: GoogleFonts.montserrat(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
+                              color: const Color(0xFF1F2937),
+                            ),
+                          ),
+                          Text(
+                            currentData.data['target']!.value,
+                            style: GoogleFonts.montserrat(
+                              fontSize: 28,
+                              fontWeight: FontWeight.w700,
+                              color: const Color(0xFF1F2937),
+                            ),
+                          ),
+                          const SizedBox(height: 5),
+                          SizedBox(
+                            width: 100,
+                            child: Text(
+                              currentData.data['target']!.subtitle,
+
+                              style: GoogleFonts.montserrat(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w400,
+                                color: AppColors.headerBlackTheme,
+                                height: 1.3,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Positioned(
+                        bottom: -1,
+                        right: -12,
+                        child: Container(
+                          width: 80,
+                          height: 80,
+                          decoration: BoxDecoration(shape: BoxShape.circle),
+                          child: SvgPicture.asset("assets/target.svg"),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+
+              const SizedBox(width: 8),
+
+              // Right Card - Overdue
+              Expanded(
+                flex: 28,
+                child: Container(
+                  height: 120,
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(
+                      color: const Color(0xFFE5E7EB),
+                      width: 1,
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.04),
+                        blurRadius: 6,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: Stack(
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            currentData.data['overdue']!.value,
+                            style: GoogleFonts.montserrat(
+                              fontSize: 24,
+                              fontWeight: FontWeight.w700,
+                              color: AppColors.headerBlackTheme,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            currentData.data['overdue']!.title,
+                            style: GoogleFonts.montserrat(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
+                              color: AppColors.headerBlackTheme,
+                            ),
+                          ),
+                        ],
+                      ),
+                      Positioned(
+                        top: 8,
+                        right: 8,
+                        child: Stack(
+                          children: [
+                            // Container(
+                            //   width: 24,
+                            //   height: 24,
+                            //   decoration: BoxDecoration(
+                            //     color: const Color(0xFFFEF2F2),
+                            //     borderRadius: BorderRadius.circular(6),
+                            //   ),
+                            //   child: const Icon(
+                            //     Icons.schedule_outlined,
+                            //     size: 14,
+                            //     color: Color(0xFFDC2626),
+                            //   ),
+                            // ),
+                            Positioned(
+                              // top: -4,
+                              // right: -4,
+                              child: Container(
+                                width: 32,
+                                height: 42,
+                                decoration: BoxDecoration(
+                                  // border: Border.all(color: Colors.black),
+                                  shape: BoxShape.circle,
+                                ),
+                                child: SvgPicture.asset("assets/overdue.svg"),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
       ],
     );
   }
 
-  Widget _buildMainTabButtons() {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: _getResponsivePadding()),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          _buildTabButton('Service tasks', 0),
-          const SizedBox(width: 5),
-          _buildTabButton('Customer Satisfaction', 1),
-        ],
-      ),
-    );
-  }
-
   Widget _buildTabButton(String title, int index) {
-    final isActive = _currentMainTab == index;
+    // final isActive = _currentMainTab == index;
 
     return InkWell(
-      onTap: () => _changeMainTab(index),
+      onTap: () => () {},
       child: Container(
         alignment: Alignment.centerLeft,
         padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
@@ -220,617 +642,816 @@ class _AnalyticsBottomState extends State<AnalyticsBottom> {
           children: [
             Text(
               title,
-              style: TextStyle(
-                fontSize: 15,
+              style: GoogleFonts.montserrat(
+                fontSize: 16,
                 fontWeight: FontWeight.w500,
-                color: isActive
-                    ? AppColors.headerBlackTheme
-                    : AppColors.fontColor,
+                color: AppColors.headerBlackTheme,
               ),
             ),
             const SizedBox(height: 4),
-            Container(
-              height: 2,
-              width: 30,
-              color: isActive ? AppColors.headerBlackTheme : Colors.transparent,
-            ),
+            Container(height: 2, width: 30, color: AppColors.headerBlackTheme),
           ],
         ),
       ),
     );
   }
-
-  Widget _buildPeriodButtons() {
-    final currentPeriod = _periodData[_periodIndex]!;
-
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: _getResponsivePadding()),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Row(
-            children: [
-              _SmallTab(
-                text: 'MTD',
-                selected: _periodIndex == 0,
-                onTap: () => _changePeriod(0),
-              ),
-              const SizedBox(width: 6),
-              _SmallTab(
-                text: 'QTD',
-                selected: _periodIndex == 1,
-                onTap: () => _changePeriod(1),
-              ),
-              const SizedBox(width: 6),
-              _SmallTab(
-                text: 'YTD',
-                selected: _periodIndex == 2,
-                onTap: () => _changePeriod(2),
-              ),
-            ],
-          ),
-          OutlinedButton(
-            style: OutlinedButton.styleFrom(
-              minimumSize: const Size(84, 23),
-              backgroundColor: Colors.white,
-              side: const BorderSide(color: Color(0xFF464F60), width: 1),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              padding: EdgeInsets.zero,
-            ),
-            onPressed: () {},
-            child: Text(
-              "Enquiry bank ${currentPeriod.bankValue}",
-              style: const TextStyle(
-                fontSize: 8,
-                color: Colors.black,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildContent() {
-    if (_currentMainTab == 0) {
-      return _buildServiceTasks();
-    } else {
-      return _buildCustomerSatisfaction();
-    }
-  }
-
-  Widget _buildServiceTasks() {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: _getResponsivePadding()),
-      child: _AnimatedThreeTiles(
-        featuredIndex: _featuredTileIndex,
-        onTapTile: _changeFeaturedTile,
-        periodData: _periodData[_periodIndex]!,
-      ),
-    );
-  }
-
-  Widget _buildCustomerSatisfaction() {
-    return const Center(
-      child: Text(
-        'Customer Satisfaction Content\nComing Soon',
-        textAlign: TextAlign.center,
-        style: TextStyle(fontSize: 16, color: Colors.grey),
-      ),
-    );
-  }
 }
 
-class _SmallTab extends StatelessWidget {
-  final String text;
-  final bool selected;
-  final VoidCallback onTap;
+// import 'package:flutter/material.dart';
+// import 'package:flutter_svg/flutter_svg.dart';
+// import 'package:google_fonts/google_fonts.dart';
+// import 'dart:math' as math;
 
-  const _SmallTab({
-    required this.text,
-    required this.selected,
-    required this.onTap,
-  });
+// import 'package:smartcare/config/component/colors.dart';
 
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-        decoration: BoxDecoration(
-          color: selected ? AppColors.headerBlackTheme : Colors.transparent,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-            color: selected ? AppColors.headerBlackTheme : Colors.grey.shade300,
-          ),
-        ),
-        child: Text(
-          text,
-          style: TextStyle(
-            fontSize: 12,
-            fontWeight: FontWeight.w500,
-            color: selected ? Colors.white : Colors.grey.shade600,
-          ),
-        ),
-      ),
-    );
-  }
-}
+// // Data model for analytics
+// class AnalyticsData {
+//   final String value;
+//   final String title;
+//   final String subtitle;
+//   final String? iconPath;
+//   final Color badgeColor;
+//   final IconData badgeIcon;
+//   final Color badgeIconColor;
+//   final String? svgPathLeft;
 
-class _AnimatedThreeTiles extends StatefulWidget {
-  final int featuredIndex;
-  final ValueChanged<int> onTapTile;
-  final PeriodData periodData;
+//   AnalyticsData({
+//     required this.value,
+//     required this.title,
+//     required this.subtitle,
+//     this.iconPath,
+//     required this.badgeColor,
+//     required this.badgeIcon,
+//     required this.badgeIconColor,
+//     this.svgPathLeft,
+//   });
+// }
 
-  const _AnimatedThreeTiles({
-    required this.featuredIndex,
-    required this.onTapTile,
-    required this.periodData,
-  });
+// // Period data model
+// class PeriodData {
+//   final Map<String, AnalyticsData> data;
+//   final String bankValue;
 
-  @override
-  State<_AnimatedThreeTiles> createState() => _AnimatedThreeTilesState();
-}
+//   PeriodData({required this.data, required this.bankValue});
+// }
 
-class _AnimatedThreeTilesState extends State<_AnimatedThreeTiles> {
-  double _dragDx = 0;
+// class AnalyticsBottom extends StatefulWidget {
+//   const AnalyticsBottom({super.key});
 
-  int _clampIndex(int i) => (i % 3 + 3) % 3;
+//   @override
+//   State<AnalyticsBottom> createState() => _AnalyticsBottomState();
+// }
 
-  @override
-  Widget build(BuildContext context) {
-    const double rowHeight = 190;
-    const double gap = 10;
-    const double peekFrac = 0.20;
+// class _AnalyticsBottomState extends State<AnalyticsBottom> {
+//   int _currentMainTab = 0;
+//   int _periodIndex = 0; // 0=MTD, 1=QTD, 2=YTD
 
-    final tileKeys = ['requests', 'target', 'overdue'];
+//   // Static data for different periods
+//   final Map<int, PeriodData> _periodData = {
+//     0: PeriodData(
+//       // MTD
+//       bankValue: '5',
+//       data: {
+//         'requests': AnalyticsData(
+//           value: '18',
+//           title: 'Service\nRequests\nopened',
+//           subtitle: '',
+//           // iconPath: 'assets/request.svg',
+//           badgeColor: Color(0xFF36D399),
+//           badgeIcon: Icons.check,
+//           badgeIconColor: Colors.white,
+//           svgPathLeft: "assets/repair.svg",
+//         ),
+//         'target': AnalyticsData(
+//           value: '15',
+//           title: 'You must pursue',
+//           subtitle: 'More Service task to\nachieve your target',
+//           iconPath: 'assets/target.svg',
+//           badgeColor: Colors.transparent,
+//           badgeIcon: Icons.check,
+//           badgeIconColor: Colors.white,
+//         ),
+//         'overdue': AnalyticsData(
+//           value: '3',
+//           title: 'Overdue',
+//           subtitle: '',
+//           iconPath: 'assets/overdue.svg',
+//           badgeColor: Color(0xFFFFC2C2),
+//           badgeIcon: Icons.close,
+//           badgeIconColor: Color(0xFFFA5A7D),
+//         ),
+//       },
+//     ),
+//     1: PeriodData(
+//       // QTD
+//       bankValue: '10',
+//       data: {
+//         'requests': AnalyticsData(
+//           value: '45',
+//           title: 'Service\nRequests\nopened',
+//           subtitle: '',
+//           iconPath: 'assets/request.svg',
+//           badgeColor: Color(0xFF36D399),
+//           badgeIcon: Icons.check,
+//           badgeIconColor: Colors.white,
+//         ),
+//         'target': AnalyticsData(
+//           value: '25',
+//           title: 'You must pursue',
+//           subtitle: 'More Service task to\nachieve your target',
+//           iconPath: 'assets/target.svg',
+//           badgeColor: Colors.transparent,
+//           badgeIcon: Icons.check,
+//           badgeIconColor: Colors.white,
+//         ),
+//         'overdue': AnalyticsData(
+//           value: '8',
+//           title: 'Overdue',
+//           subtitle: '',
+//           iconPath: 'assets/overdue.svg',
+//           badgeColor: Color(0xFFFFC2C2),
+//           badgeIcon: Icons.close,
+//           badgeIconColor: Color(0xFFFA5A7D),
+//         ),
+//       },
+//     ),
+//     2: PeriodData(
+//       // YTD
+//       bankValue: '15',
+//       data: {
+//         'requests': AnalyticsData(
+//           value: '156',
+//           title: 'Service\nRequests\nopened',
+//           subtitle: '',
+//           iconPath: 'assets/request.svg',
+//           badgeColor: Color(0xFF36D399),
+//           badgeIcon: Icons.check,
+//           badgeIconColor: Colors.white,
+//         ),
+//         'target': AnalyticsData(
+//           value: '42',
+//           title: 'You must pursue',
+//           subtitle: 'More Service task to\nachieve your target',
+//           iconPath: 'assets/target.svg',
+//           badgeColor: Colors.transparent,
+//           badgeIcon: Icons.check,
+//           badgeIconColor: Colors.white,
+//         ),
+//         'overdue': AnalyticsData(
+//           value: '12',
+//           title: 'Overdue',
+//           subtitle: '',
+//           iconPath: 'assets/overdue.svg',
+//           badgeColor: Color(0xFFFFC2C2),
+//           badgeIcon: Icons.close,
+//           badgeIconColor: Color(0xFFFA5A7D),
+//         ),
+//       },
+//     ),
+//   };
 
-    final order = <int>[
-      widget.featuredIndex == 0 ? 1 : 0,
-      widget.featuredIndex,
-      widget.featuredIndex == 2 ? 1 : 2,
-    ];
+//   void _changeMainTab(int index) {
+//     setState(() {
+//       _currentMainTab = index;
+//     });
+//   }
 
-    final int centerIncomingFrom = widget.featuredIndex == 0
-        ? -1
-        : widget.featuredIndex == 2
-        ? 1
-        : 0;
+//   void _changePeriod(int index) {
+//     setState(() {
+//       _periodIndex = index;
+//     });
+//   }
 
-    return SizedBox(
-      height: rowHeight,
-      child: Center(
-        child: GestureDetector(
-          onHorizontalDragUpdate: (d) => setState(() => _dragDx += d.delta.dx),
-          onHorizontalDragEnd: (details) {
-            final vx = details.primaryVelocity ?? 0;
-            setState(() => _dragDx = 0);
-            if (vx.abs() < 100) return;
-            if (vx < 0) {
-              widget.onTapTile(_clampIndex(widget.featuredIndex + 1));
-            } else {
-              widget.onTapTile(_clampIndex(widget.featuredIndex - 1));
-            }
-          },
-          child: LayoutBuilder(
-            builder: (context, constraints) {
-              final double viewportW = constraints.maxWidth;
+//   double _getResponsivePadding() {
+//     return 10.0 * _getResponsiveScale();
+//   }
 
-              double sideW = 120.0;
-              final double minCenter = 160.0;
-              if (viewportW < (2 * (gap + peekFrac * sideW) + minCenter)) {
-                final double maxSideW =
-                    ((viewportW - minCenter) / 2 - gap) / peekFrac;
-                sideW = maxSideW.clamp(80.0, sideW);
-              }
+//   double _getResponsiveScale() {
+//     final width = MediaQuery.of(context).size.width;
+//     if (width <= 320) return 0.85;
+//     if (width <= 375) return 0.95;
+//     if (width <= 414) return 1.0;
+//     if (width <= 600) return 1.05;
+//     if (width <= 768) return 1.1;
+//     return 1.15;
+//   }
 
-              double centerW = viewportW - 2 * (gap + peekFrac * sideW);
-              centerW = centerW.clamp(minCenter, viewportW - 2 * (gap + 40.0));
-              centerW -= 7.0;
+//   @override
+//   Widget build(BuildContext context) {
+//     return Column(
+//       crossAxisAlignment: CrossAxisAlignment.start,
+//       mainAxisSize: MainAxisSize.min,
+//       children: [
+//         _buildMainTabButtons(),
+//         const SizedBox(height: 20),
+//         _buildPeriodButtons(),
+//         const SizedBox(height: 20),
+//         SizedBox(
+//           height: 180, // Adjusted height for all three tiles
+//           child: _buildContent(),
+//         ),
+//         const SizedBox(height: 20),
+//       ],
+//     );
+//   }
 
-              double centerH = (178 / 192 * centerW);
-              centerH -= 7.0;
-              centerH = centerH.clamp(140.0, rowHeight);
+//   Widget _buildMainTabButtons() {
+//     return Padding(
+//       padding: EdgeInsets.symmetric(horizontal: _getResponsivePadding()),
+//       child: Row(
+//         mainAxisAlignment: MainAxisAlignment.start,
+//         children: [
+//           _buildTabButton('Service tasks', 0),
+//           const SizedBox(width: 5),
+//           _buildTabButton('Customer Satisfaction', 1),
+//         ],
+//       ),
+//     );
+//   }
 
-              final double sideH = (118 / 102 * sideW).clamp(100.0, rowHeight);
-              final double baseOffsetL = -sideW * (1 - peekFrac);
+//   Widget _buildTabButton(String title, int index) {
+//     final isActive = _currentMainTab == index;
 
-              final slotLefts = <double>[
-                0.0,
-                sideW + gap,
-                sideW + gap + centerW + gap,
-              ];
+//     return InkWell(
+//       onTap: () => _changeMainTab(index),
+//       child: Container(
+//         alignment: Alignment.centerLeft,
+//         padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
+//         child: Column(
+//           crossAxisAlignment: CrossAxisAlignment.start,
+//           children: [
+//             Text(
+//               title,
+//               style: TextStyle(
+//                 fontSize: 15,
+//                 fontWeight: FontWeight.w500,
+//                 color: isActive
+//                     ? AppColors.headerBlackTheme
+//                     : AppColors.fontColor,
+//               ),
+//             ),
+//             const SizedBox(height: 4),
+//             Container(
+//               height: 2,
+//               width: 30,
+//               color: isActive ? AppColors.headerBlackTheme : Colors.transparent,
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
 
-              return SizedBox(
-                width: viewportW,
-                height: rowHeight,
-                child: Stack(
-                  clipBehavior: Clip.none,
-                  children: [
-                    for (int slot = 0; slot < 3; slot++)
-                      _AnimatedTileSlot(
-                        key: ValueKey('slot_${slot}_${order[slot]}'),
-                        index: order[slot],
-                        isCenter: slot == 1,
-                        incomingFrom: slot == 1 ? centerIncomingFrom : 0,
-                        targetLeft:
-                            baseOffsetL +
-                            slotLefts[slot] +
-                            (slot == 1 ? -_dragDx * 0.12 : 0),
-                        targetW: slot == 1 ? centerW : sideW,
-                        targetH: slot == 1 ? centerH : sideH,
-                        onTap: () => widget.onTapTile(order[slot]),
-                        child: _buildTileContent(
-                          tileKeys[order[slot]],
-                          widget.periodData.data[tileKeys[order[slot]]]!,
-                          slot == 1,
-                        ),
-                      ),
-                  ],
-                ),
-              );
-            },
-          ),
-        ),
-      ),
-    );
-  }
+//   Widget _buildPeriodButtons() {
+//     final currentPeriod = _periodData[_periodIndex]!;
 
-  Widget _buildTileContent(String key, AnalyticsData data, bool isCenter) {
-    if (key == 'target') {
-      return _PursueTile(data: data);
-    } else if (key == 'requests') {
-      return _RequestsTile(data: data);
-    } else {
-      return _OverdueTile(data: data);
-    }
-  }
-}
+//     return Padding(
+//       padding: EdgeInsets.symmetric(horizontal: _getResponsivePadding()),
+//       child: Row(
+//         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//         children: [
+//           Row(
+//             children: [
+//               _SmallTab(
+//                 text: 'MTD',
+//                 selected: _periodIndex == 0,
+//                 onTap: () => _changePeriod(0),
+//               ),
+//               const SizedBox(width: 6),
+//               _SmallTab(
+//                 text: 'QTD',
+//                 selected: _periodIndex == 1,
+//                 onTap: () => _changePeriod(1),
+//               ),
+//               const SizedBox(width: 6),
+//               _SmallTab(
+//                 text: 'YTD',
+//                 selected: _periodIndex == 2,
+//                 onTap: () => _changePeriod(2),
+//               ),
+//             ],
+//           ),
+//           OutlinedButton(
+//             style: OutlinedButton.styleFrom(
+//               minimumSize: const Size(84, 23),
+//               backgroundColor: Colors.white,
+//               side: const BorderSide(color: Color(0xFF464F60), width: 1),
+//               shape: RoundedRectangleBorder(
+//                 borderRadius: BorderRadius.circular(12),
+//               ),
+//               padding: EdgeInsets.zero,
+//             ),
+//             onPressed: () {},
+//             child: Text(
+//               "Enquiry bank ${currentPeriod.bankValue}",
+//               style: const TextStyle(
+//                 fontSize: 8,
+//                 color: Colors.black,
+//                 fontWeight: FontWeight.w500,
+//               ),
+//             ),
+//           ),
+//         ],
+//       ),
+//     );
+//   }
 
-class _AnimatedTileSlot extends StatelessWidget {
-  final int index;
-  final bool isCenter;
-  final int incomingFrom;
-  final double targetLeft;
-  final double targetW, targetH;
-  final VoidCallback onTap;
-  final Widget child;
+//   Widget _buildContent() {
+//     if (_currentMainTab == 0) {
+//       return _buildServiceTasks();
+//     } else {
+//       return _buildCustomerSatisfaction();
+//     }
+//   }
 
-  const _AnimatedTileSlot({
-    super.key,
-    required this.index,
-    required this.isCenter,
-    required this.incomingFrom,
-    required this.targetLeft,
-    required this.targetW,
-    required this.targetH,
-    required this.onTap,
-    required this.child,
-  });
+//   Widget _buildServiceTasks() {
+//     return Padding(
+//       padding: EdgeInsets.symmetric(horizontal: _getResponsivePadding()),
+//       child: _AllThreeTilesRow(periodData: _periodData[_periodIndex]!),
+//     );
+//   }
 
-  @override
-  Widget build(BuildContext context) {
-    final double targetOpacity = isCenter ? 1.0 : 0.70;
-    final double targetScale = isCenter ? 1.0 : 0.98;
+//   Widget _buildCustomerSatisfaction() {
+//     return const Center(
+//       child: Text(
+//         'Customer Satisfaction Content\nComing Soon',
+//         textAlign: TextAlign.center,
+//         style: TextStyle(fontSize: 16, color: Colors.grey),
+//       ),
+//     );
+//   }
+// }
 
-    final Color borderColor = isCenter
-        ? const Color(0xFF212E51).withOpacity(0.18)
-        : const Color(0xFFE1E1E1);
+// class _SmallTab extends StatelessWidget {
+//   final String text;
+//   final bool selected;
+//   final VoidCallback onTap;
 
-    final List<BoxShadow> shadow = isCenter
-        ? [
-            BoxShadow(
-              color: const Color(0xFF212E51).withOpacity(0.08),
-              blurRadius: 14,
-              offset: const Offset(0, 6),
-            ),
-          ]
-        : [];
+//   const _SmallTab({
+//     required this.text,
+//     required this.selected,
+//     required this.onTap,
+//   });
 
-    return AnimatedPositioned(
-      duration: const Duration(milliseconds: 330),
-      curve: Curves.easeInOut,
-      left: targetLeft,
-      top: (190 - targetH) / 2,
-      child: GestureDetector(
-        onTap: onTap,
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 330),
-          curve: Curves.easeInOut,
-          width: targetW,
-          height: targetH,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: borderColor, width: 1),
-            boxShadow: shadow,
-          ),
-          child: AnimatedOpacity(
-            duration: const Duration(milliseconds: 220),
-            curve: Curves.easeInOut,
-            opacity: targetOpacity,
-            child: AnimatedScale(
-              scale: targetScale,
-              duration: const Duration(milliseconds: 260),
-              curve: Curves.easeInOut,
-              child: AnimatedSwitcher(
-                duration: const Duration(milliseconds: 260),
-                switchInCurve: Curves.easeOut,
-                switchOutCurve: Curves.easeIn,
-                transitionBuilder: (w, anim) {
-                  final begin = isCenter
-                      ? Offset(incomingFrom * 0.22, 0)
-                      : const Offset(0, 0);
-                  return SlideTransition(
-                    position: Tween(
-                      begin: begin,
-                      end: Offset.zero,
-                    ).animate(anim),
-                    child: FadeTransition(opacity: anim, child: w),
-                  );
-                },
-                child: Container(
-                  key: ValueKey<int>(index * 10 + (isCenter ? 1 : 0)),
-                  child: child,
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return GestureDetector(
+//       onTap: onTap,
+//       child: Container(
+//         margin: EdgeInsets.all(2),
+//         padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 0),
+//         decoration: BoxDecoration(
+//           color: selected ? AppColors.headerBlackTheme : Colors.transparent,
+//           borderRadius: BorderRadius.circular(12),
+//           border: Border.all(
+//             color: selected ? AppColors.headerBlackTheme : Colors.grey.shade300,
+//           ),
+//         ),
+//         child: Text(
+//           text,
+//           style: GoogleFonts.montserrat(
+//             fontSize: 12,
+//             fontWeight: FontWeight.w500,
+//             color: selected ? Colors.white : Colors.grey.shade600,
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }
 
-// Tile Components
-class _RequestsTile extends StatelessWidget {
-  final AnalyticsData data;
+// // New widget to display all three tiles in a row
+// class _AllThreeTilesRow extends StatelessWidget {
+//   final PeriodData periodData;
 
-  const _RequestsTile({required this.data});
+//   const _AllThreeTilesRow({required this.periodData});
 
-  @override
-  Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        return Container(
-          padding: const EdgeInsets.all(12),
-          child: Stack(
-            clipBehavior: Clip.none,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    data.value,
-                    style: const TextStyle(
-                      fontSize: 28,
-                      fontWeight: FontWeight.w700,
-                      color: Color(0xFF212E51),
-                      height: 1,
-                    ),
-                  ),
-                  const SizedBox(height: 6),
-                  Text(
-                    data.title,
-                    style: const TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                      color: Color(0xFF212E51),
-                      height: 1.2,
-                    ),
-                  ),
-                ],
-              ),
-              Positioned(
-                right: 4,
-                top: 6,
-                child: Stack(
-                  clipBehavior: Clip.none,
-                  children: [
-                    Container(
-                      width: 24,
-                      height: 24,
-                      decoration: BoxDecoration(
-                        color: Colors.blue.shade100,
-                        borderRadius: BorderRadius.circular(6),
-                      ),
-                      child: Icon(
-                        Icons.receipt_long,
-                        size: 16,
-                        color: Colors.blue.shade600,
-                      ),
-                    ),
-                    Positioned(
-                      right: -6,
-                      top: -6,
-                      child: Container(
-                        width: 14,
-                        height: 14,
-                        decoration: BoxDecoration(
-                          color: data.badgeColor,
-                          shape: BoxShape.circle,
-                        ),
-                        child: Icon(
-                          data.badgeIcon,
-                          size: 10,
-                          color: data.badgeIconColor,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     final tileKeys = ['requests', 'target', 'overdue'];
 
-class _PursueTile extends StatelessWidget {
-  final AnalyticsData data;
+//     return LayoutBuilder(
+//       builder: (context, constraints) {
+//         // Calculate tile width based on available space
+//         final double availableWidth = constraints.maxWidth;
+//         final double spacing = 8.0;
+//         final double tileWidth = (availableWidth - (spacing * 2)) / 3;
 
-  const _PursueTile({required this.data});
+//         return Row(
+//           children: [
+//             // Service Requests Tile
+//             Expanded(
+//               child: Container(
+//                 height: 160,
+//                 decoration: BoxDecoration(
+//                   color: Colors.white,
+//                   borderRadius: BorderRadius.circular(16),
+//                   border: Border.all(color: const Color(0xFFE1E1E1), width: 1),
+//                   boxShadow: [
+//                     BoxShadow(
+//                       color: const Color(0xFF212E51).withOpacity(0.04),
+//                       blurRadius: 8,
+//                       offset: const Offset(0, 2),
+//                     ),
+//                   ],
+//                 ),
+//                 child: _buildTileContent(
+//                   'requests',
+//                   periodData.data['requests']!,
+//                 ),
+//               ),
+//             ),
+//             SizedBox(width: spacing),
 
-  @override
-  Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        return Container(
-          padding: const EdgeInsets.all(16),
-          child: Stack(
-            clipBehavior: Clip.hardEdge,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Expanded(
-                        child: Text(
-                          data.title,
-                          style: const TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                            color: Color(0xFF212E51),
-                          ),
-                        ),
-                      ),
-                      Text(
-                        data.value,
-                        style: const TextStyle(
-                          fontSize: 28,
-                          fontWeight: FontWeight.w700,
-                          color: Color(0xFF212E51),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 10),
-                  Text(
-                    data.subtitle,
-                    style: const TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w500,
-                      color: Color(0xFFD8C495),
-                      height: 1.3,
-                    ),
-                  ),
-                ],
-              ),
-              Positioned(
-                right: 6,
-                bottom: 4,
-                child: Container(
-                  width: constraints.maxWidth * 0.36,
-                  height: constraints.maxHeight * 0.58,
-                  decoration: BoxDecoration(
-                    color: Colors.purple.shade50,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Icon(
-                    Icons.track_changes,
-                    size: 24,
-                    color: Colors.purple.shade300,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
-}
+//             // Target Tile (slightly larger)
+//             Expanded(
+//               flex: 1,
+//               child: Container(
+//                 height: 160,
+//                 decoration: BoxDecoration(
+//                   color: Colors.white,
+//                   borderRadius: BorderRadius.circular(16),
+//                   border: Border.all(
+//                     color: const Color(0xFF212E51).withOpacity(0.18),
+//                     width: 1,
+//                   ),
+//                   boxShadow: [
+//                     BoxShadow(
+//                       color: const Color(0xFF212E51).withOpacity(0.08),
+//                       blurRadius: 12,
+//                       offset: const Offset(0, 4),
+//                     ),
+//                   ],
+//                 ),
+//                 child: _buildTileContent('target', periodData.data['target']!),
+//               ),
+//             ),
+//             SizedBox(width: spacing),
 
-class _OverdueTile extends StatelessWidget {
-  final AnalyticsData data;
+//             // Overdue Tile
+//             Expanded(
+//               child: Container(
+//                 height: 160,
+//                 decoration: BoxDecoration(
+//                   color: Colors.white,
+//                   borderRadius: BorderRadius.circular(16),
+//                   border: Border.all(color: const Color(0xFFE1E1E1), width: 1),
+//                   boxShadow: [
+//                     BoxShadow(
+//                       color: const Color(0xFF212E51).withOpacity(0.04),
+//                       blurRadius: 8,
+//                       offset: const Offset(0, 2),
+//                     ),
+//                   ],
+//                 ),
+//                 child: _buildTileContent(
+//                   'overdue',
+//                   periodData.data['overdue']!,
+//                 ),
+//               ),
+//             ),
+//           ],
+//         );
+//       },
+//     );
+//   }
 
-  const _OverdueTile({required this.data});
+//   Widget _buildTileContent(String key, AnalyticsData data) {
+//     if (key == 'target') {
+//       return _PursueTile(data: data);
+//     } else if (key == 'requests') {
+//       return _RequestsTile(data: data);
+//     } else {
+//       return _OverdueTile(data: data);
+//     }
+//   }
+// }
 
-  @override
-  Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        return Container(
-          padding: const EdgeInsets.all(12),
-          child: Stack(
-            clipBehavior: Clip.none,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    data.value,
-                    style: const TextStyle(
-                      fontSize: 28,
-                      fontWeight: FontWeight.w700,
-                      color: Color(0xFF212E51),
-                      height: 1,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    data.title,
-                    style: const TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                      color: Color(0xFF212E51),
-                    ),
-                  ),
-                ],
-              ),
-              Positioned(
-                right: 2,
-                top: 6,
-                child: Stack(
-                  clipBehavior: Clip.none,
-                  children: [
-                    Container(
-                      width: 24,
-                      height: 24,
-                      decoration: BoxDecoration(
-                        color: Colors.red.shade100,
-                        borderRadius: BorderRadius.circular(6),
-                      ),
-                      child: Icon(
-                        Icons.schedule,
-                        size: 16,
-                        color: Colors.red.shade600,
-                      ),
-                    ),
-                    Positioned(
-                      right: -8,
-                      top: -8,
-                      child: Container(
-                        width: 16,
-                        height: 16,
-                        decoration: BoxDecoration(
-                          color: data.badgeColor,
-                          shape: BoxShape.circle,
-                        ),
-                        child: Icon(
-                          data.badgeIcon,
-                          size: 10,
-                          color: data.badgeIconColor,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
-}
+// // Tile Components (simplified for smaller sizes)
+// class _RequestsTile extends StatelessWidget {
+//   final AnalyticsData data;
+
+//   const _RequestsTile({required this.data});
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Container(
+//       padding: const EdgeInsets.all(8),
+//       child: Stack(
+//         clipBehavior: Clip.none,
+//         children: [
+//           Column(
+//             crossAxisAlignment: CrossAxisAlignment.start,
+//             mainAxisSize: MainAxisSize.min,
+//             children: [
+//               Text(
+//                 data.value,
+//                 style: const TextStyle(
+//                   fontSize: 24,
+//                   fontWeight: FontWeight.w700,
+//                   color: Color(0xFF212E51),
+//                   height: 1,
+//                 ),
+//               ),
+//               const SizedBox(height: 6),
+//               Text(
+//                 data.title,
+//                 style: const TextStyle(
+//                   fontSize: 10,
+//                   fontWeight: FontWeight.w600,
+//                   color: Color(0xFF212E51),
+//                   height: 1.2,
+//                 ),
+//               ),
+//             ],
+//           ),
+//           Positioned(
+//             right: 2,
+//             top: 4,
+//             child: Stack(
+//               clipBehavior: Clip.none,
+//               children: [
+//                 Container(
+//                   width: 24,
+//                   height: 24,
+//                   decoration: BoxDecoration(
+//                     color: Colors.blue.shade50,
+//                     borderRadius: BorderRadius.circular(5),
+//                   ),
+//                   child: data.svgPathLeft != null
+//                       ? SvgPicture.asset(
+//                           data.svgPathLeft!,
+//                           fit: BoxFit.scaleDown,
+//                         )
+//                       : (data.iconPath != null
+//                             ? SvgPicture.asset(
+//                                 data.iconPath!,
+//                                 fit: BoxFit.scaleDown,
+//                               )
+//                             : Icon(
+//                                 Icons.receipt_long,
+//                                 size: 16,
+//                                 color: Colors.blue.shade600,
+//                               )),
+//                 ),
+//                 Positioned(
+//                   right: -4,
+//                   top: -4,
+//                   child: Container(
+//                     width: 12,
+//                     height: 12,
+//                     decoration: BoxDecoration(
+//                       color: data.badgeColor,
+//                       shape: BoxShape.circle,
+//                     ),
+//                     child: Icon(
+//                       data.badgeIcon,
+//                       size: 8,
+//                       color: data.badgeIconColor,
+//                     ),
+//                   ),
+//                 ),
+//               ],
+//             ),
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }
+
+// // class _RequestsTile extends StatelessWidget {
+// //   final AnalyticsData data;
+
+// //   const _RequestsTile({required this.data});
+
+// //   @override
+// //   Widget build(BuildContext context) {
+// //     return Container(
+// //       padding: const EdgeInsets.all(8),
+// //       child: Stack(
+// //         clipBehavior: Clip.none,
+// //         children: [
+// //           Column(
+// //             crossAxisAlignment: CrossAxisAlignment.start,
+// //             mainAxisSize: MainAxisSize.min,
+// //             children: [
+// //               Text(
+// //                 data.value,
+// //                 style: const TextStyle(
+// //                   fontSize: 24,
+// //                   fontWeight: FontWeight.w700,
+// //                   color: Color(0xFF212E51),
+// //                   height: 1,
+// //                 ),
+// //               ),
+// //               const SizedBox(height: 6),
+// //               Text(
+// //                 data.title,
+// //                 style: const TextStyle(
+// //                   fontSize: 10,
+// //                   fontWeight: FontWeight.w600,
+// //                   color: Color(0xFF212E51),
+// //                   height: 1.2,
+// //                 ),
+// //               ),
+// //             ],
+// //           ),
+// //           Positioned(
+// //             right: 2,
+// //             top: 4,
+// //             child: Stack(
+// //               clipBehavior: Clip.none,
+// //               children: [
+// //                 Container(
+// //                   width: 20,
+// //                   height: 20,
+// //                   decoration: BoxDecoration(
+// //                     color: Colors.blue.shade100,
+// //                     borderRadius: BorderRadius.circular(5),
+// //                   ),
+// //                   child: Icon(
+// //                     Icons.receipt_long,
+// //                     size: 14,
+// //                     color: Colors.blue.shade600,
+// //                   ),
+// //                 ),
+// //                 Positioned(
+// //                   right: -4,
+// //                   top: -4,
+// //                   child: Container(
+// //                     width: 12,
+// //                     height: 12,
+// //                     decoration: BoxDecoration(
+// //                       color: data.badgeColor,
+// //                       shape: BoxShape.circle,
+// //                     ),
+// //                     child: Icon(
+// //                       data.badgeIcon,
+// //                       size: 8,
+// //                       color: data.badgeIconColor,
+// //                     ),
+// //                   ),
+// //                 ),
+// //               ],
+// //             ),
+// //           ),
+// //         ],
+// //       ),
+// //     );
+// //   }
+// // }
+
+// class _PursueTile extends StatelessWidget {
+//   final AnalyticsData data;
+
+//   const _PursueTile({required this.data});
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Container(
+//       padding: const EdgeInsets.all(10),
+//       child: Stack(
+//         clipBehavior: Clip.hardEdge,
+//         children: [
+//           Column(
+//             crossAxisAlignment: CrossAxisAlignment.start,
+//             children: [
+//               Row(
+//                 crossAxisAlignment: CrossAxisAlignment.start,
+//                 children: [
+//                   Expanded(
+//                     child: Text(
+//                       data.title,
+//                       style: const TextStyle(
+//                         fontSize: 11,
+//                         fontWeight: FontWeight.w600,
+//                         color: Color(0xFF212E51),
+//                       ),
+//                     ),
+//                   ),
+//                   Text(
+//                     data.value,
+//                     style: const TextStyle(
+//                       fontSize: 24,
+//                       fontWeight: FontWeight.w700,
+//                       color: Color(0xFF212E51),
+//                     ),
+//                   ),
+//                 ],
+//               ),
+//               const SizedBox(height: 8),
+//               Text(
+//                 data.subtitle,
+//                 style: const TextStyle(
+//                   fontSize: 10,
+//                   fontWeight: FontWeight.w500,
+//                   color: Color(0xFFD8C495),
+//                   height: 1.2,
+//                 ),
+//               ),
+//             ],
+//           ),
+//           Positioned(
+//             right: 4,
+//             bottom: 2,
+//             child: Container(
+//               width: 30,
+//               height: 30,
+//               decoration: BoxDecoration(
+//                 color: Colors.purple.shade50,
+//                 borderRadius: BorderRadius.circular(6),
+//               ),
+//               child: Icon(
+//                 Icons.track_changes,
+//                 size: 18,
+//                 color: Colors.purple.shade300,
+//               ),
+//             ),
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }
+
+// class _OverdueTile extends StatelessWidget {
+//   final AnalyticsData data;
+
+//   const _OverdueTile({required this.data});
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Container(
+//       padding: const EdgeInsets.all(8),
+//       child: Stack(
+//         clipBehavior: Clip.none,
+//         children: [
+//           Column(
+//             crossAxisAlignment: CrossAxisAlignment.start,
+//             mainAxisSize: MainAxisSize.min,
+//             children: [
+//               Text(
+//                 data.value,
+//                 style: const TextStyle(
+//                   fontSize: 24,
+//                   fontWeight: FontWeight.w700,
+//                   color: Color(0xFF212E51),
+//                   height: 1,
+//                 ),
+//               ),
+//               const SizedBox(height: 6),
+//               Text(
+//                 data.title,
+//                 style: const TextStyle(
+//                   fontSize: 12,
+//                   fontWeight: FontWeight.w600,
+//                   color: Color(0xFF212E51),
+//                 ),
+//               ),
+//             ],
+//           ),
+//           Positioned(
+//             right: 2,
+//             top: 4,
+//             child: Stack(
+//               clipBehavior: Clip.none,
+//               children: [
+//                 Container(
+//                   width: 20,
+//                   height: 20,
+//                   decoration: BoxDecoration(
+//                     color: Colors.red.shade100,
+//                     borderRadius: BorderRadius.circular(5),
+//                   ),
+//                   child: Icon(
+//                     Icons.schedule,
+//                     size: 14,
+//                     color: Colors.red.shade600,
+//                   ),
+//                 ),
+//                 Positioned(
+//                   right: -5,
+//                   top: -5,
+//                   child: Container(
+//                     width: 14,
+//                     height: 14,
+//                     decoration: BoxDecoration(
+//                       color: data.badgeColor,
+//                       shape: BoxShape.circle,
+//                     ),
+//                     child: Icon(
+//                       data.badgeIcon,
+//                       size: 8,
+//                       color: data.badgeIconColor,
+//                     ),
+//                   ),
+//                 ),
+//               ],
+//             ),
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }

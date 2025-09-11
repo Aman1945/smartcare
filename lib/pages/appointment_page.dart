@@ -1,23 +1,3 @@
-// import 'package:flutter/material.dart';
-
-// class AppointmentPage extends StatefulWidget {
-//   const AppointmentPage({super.key});
-
-//   @override
-//   State<AppointmentPage> createState() => _AppointmentPageState();
-// }
-
-// class _AppointmentPageState extends State<AppointmentPage> {
-//   @override
-//   Widget build(BuildContext context) {
-//     return const Placeholder();
-//   }
-// }
-
-//thrid one
-
-
-
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:google_fonts/google_fonts.dart';

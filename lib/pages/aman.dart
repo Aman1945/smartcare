@@ -204,7 +204,7 @@ class _AmanState extends State<Aman> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => (){},
+        onPressed: () => () {},
         backgroundColor: const Color(0xFF22215B),
         child: const Icon(Icons.add, size: 30, color: Colors.white),
       ),
@@ -409,7 +409,7 @@ class _AppointmentItemState extends State<_AppointmentItem>
         extentRatio: 0.40,
         children: [
           SlidableAction(
-            onPressed: (context) =>(){},
+            onPressed: (context) => () {},
             backgroundColor: Colors.redAccent,
             foregroundColor: Colors.white,
             icon: Icons.notifications,
