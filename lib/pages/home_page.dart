@@ -6,6 +6,7 @@ import 'package:smartcare/config/component/font.dart';
 import 'package:smartcare/config/getx/fabcontroller.dart';
 import 'package:smartcare/widgets/activities.dart';
 import 'package:smartcare/widgets/analytics/analytics_bottom.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -29,18 +30,23 @@ class _HomePageState extends State<HomePage> {
         children: [
           Scaffold(
             backgroundColor: Colors.white,
-            appBar: AppBar(
-              automaticallyImplyLeading: false,
-              backgroundColor: AppColors.white,
-              title: Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  'smart care',
-                  textAlign: TextAlign.left,
-                  style: AppFont.appbarfontblack(context),
-                ),
-              ),
-            ),
+appBar: AppBar(
+  automaticallyImplyLeading: false,
+  
+  backgroundColor: AppColors.white,
+  title: Align(
+    alignment: Alignment.centerLeft,
+    child: Text(
+      'smart care',
+      textAlign: TextAlign.left,
+      style: GoogleFonts.montserrat(
+        fontWeight: FontWeight.bold,
+        fontSize: 24,
+        color: const Color(0xFF212E51), // custom color
+      ),
+    ),
+  ),
+),
             body: Stack(
               children: [
                 SafeArea(
@@ -238,36 +244,53 @@ class _HomePageState extends State<HomePage> {
                           mainAxisSize: MainAxisSize.min,
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
-                            _buildSafePopupItem(
-                              Icons.call,
-                              "Followup",
-                              0,
-                              menuValue,
-                              onTap: () {
-                                fabController.closeFab();
-                                // _showAppointmentPopup(context);
-                              },
-                            ),
-                            _buildSafePopupItem(
-                              Icons.calendar_month_outlined,
-                              "Appointment",
-                              1,
-                              menuValue,
-                              onTap: () {
-                                fabController.closeFab();
-                                // _showLeadPopup(context);
-                              },
-                            ),
-                            _buildSafePopupItem(
-                              Icons.more_time_rounded,
-                              "Reminders",
-                              2,
-                              menuValue,
-                              onTap: () {
-                                fabController.closeFab();
-                                // _showFollowupPopup(context);
-                              },
-                            ),
+
+                            
+_buildSafePopupItem(
+  SvgPicture.asset(
+    "assets/followup.svg",
+    width: 40,
+    height: 40,
+ // only if you want to override fill
+  ),
+  "Reminders",
+  2,
+  menuValue,
+  onTap: () {
+    fabController.closeFab();
+  },
+),
+
+_buildSafePopupItem(
+  SvgPicture.asset(
+    "assets/appointment.svg",
+      width: 40,
+    height: 40,
+  ),
+  "Appointment",
+  1,
+  menuValue,
+  onTap: () {
+    fabController.onAppointmentClick(context);
+  },
+),
+
+
+_buildSafePopupItem(
+  SvgPicture.asset(
+    "assets/reminder.svg",
+    width: 40,
+    height: 40,
+ // only if you want to override fill
+  ),
+  "Reminders",
+  2,
+  menuValue,
+  onTap: () {
+    fabController.closeFab();
+  },
+),
+
                           ],
                         ),
                       ),
@@ -288,88 +311,63 @@ class _HomePageState extends State<HomePage> {
       );
     });
   }
+Widget _buildSafePopupItem(
+  Widget icon,
+  String label,
+  int index,
+  double menuProgress, {
+  required Function() onTap,
+}) {
+  final delay = (index * 100).toDouble();
+  double itemProgress = 0.0;
+  if (menuProgress > 0.1) {
+    itemProgress = ((menuProgress - 0.1) / 0.9).clamp(0.0, 1.0);
+  }
 
-  Widget _buildSafePopupItem(
-    IconData icon,
-    String label,
-    int index,
-    double menuProgress, {
-    required Function() onTap,
-  }) {
-    // Simple delay calculation that won't cause issues
-    final delay = (index * 100).toDouble(); // milliseconds delay
-    final totalDuration = 400.0; // total animation duration in ms
+  final easedProgress = Curves.easeOutBack.transform(itemProgress);
+  final safeOpacity = easedProgress.clamp(0.0, 1.0);
+  final safeScale = (0.3 + (easedProgress * 0.7)).clamp(0.3, 1.0);
+  final safeTranslateY = ((1.0 - easedProgress) * 30.0).clamp(0.0, 30.0);
 
-    // Calculate progress for this item (0.0 to 1.0)
-    double itemProgress = 0.0;
-    if (menuProgress > 0.1) {
-      // Start after 10% of menu animation
-      itemProgress = ((menuProgress - 0.1) / 0.9).clamp(0.0, 1.0);
-    }
-
-    // Apply easing curve safely
-    final easedProgress = Curves.easeOutBack.transform(itemProgress);
-    final safeOpacity = easedProgress.clamp(0.0, 1.0);
-    final safeScale = (0.3 + (easedProgress * 0.7)).clamp(0.3, 1.0);
-    final safeTranslateY = ((1.0 - easedProgress) * 30.0).clamp(0.0, 30.0);
-
-    return AnimatedContainer(
-      duration: Duration(milliseconds: (300 + delay).round()),
-      curve: Curves.easeOutBack,
-      transform: Matrix4.translationValues(0, safeTranslateY, 0),
-      child: Transform.scale(
-        scale: safeScale,
-        child: Opacity(
-          opacity: safeOpacity,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 6),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 6,
-                  ),
-
-                  child: Text(
-                    label,
-                    style: GoogleFonts.montserrat(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                      color: AppColors.white,
-                    ),
+  return AnimatedContainer(
+    duration: Duration(milliseconds: (300 + delay).round()),
+    curve: Curves.easeOutBack,
+    transform: Matrix4.translationValues(0, safeTranslateY, 0),
+    child: Transform.scale(
+      scale: safeScale,
+      child: Opacity(
+        opacity: safeOpacity,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 6),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 6,
+                ),
+                child: Text(
+                  label,
+                  style: GoogleFonts.montserrat(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                    color: AppColors.white,
                   ),
                 ),
-                const SizedBox(width: 8),
-                GestureDetector(
-                  onTap: onTap,
-                  behavior: HitTestBehavior.opaque,
-                  child: Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: AppColors.headerBlackTheme,
-                      borderRadius: BorderRadius.circular(30),
-                      boxShadow: safeOpacity > 0.3
-                          ? [
-                              BoxShadow(
-                                color: AppColors.headerBlackTheme.withOpacity(
-                                  0.3,
-                                ),
-                                blurRadius: 8,
-                                offset: const Offset(0, 4),
-                              ),
-                            ]
-                          : [],
-                    ),
-                    child: Icon(icon, color: Colors.white, size: 24),
-                  ),
-                ),
-              ],
-            ),
+              ),
+              const SizedBox(width: 8),
+              GestureDetector(
+                onTap: onTap,
+                behavior: HitTestBehavior.opaque,
+                // ⛔ removed background decoration here
+                child: icon,
+              ),
+            ],
           ),
         ),
       ),
-    );
-  } // Popup Item Builder
+    ),
+  );
+}
 }

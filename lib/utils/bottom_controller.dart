@@ -5,7 +5,7 @@ import 'package:smartcare/pages/calendar_page.dart';
 import 'package:smartcare/pages/home_page.dart';
 import 'package:smartcare/pages/settings_page.dart';
 import 'package:smartcare/pages/single_enquiry.dart';
-
+import 'package:smartcare/widgets/followups/upcoming_followups.dart';
 class NavigationController extends GetxController {
   var selectedIndex = 0.obs;
   var userRole = ''.obs; // Observable to track user role
@@ -16,9 +16,9 @@ class NavigationController extends GetxController {
     List<Widget> baseScreens = [
       HomePage(),
       CalendarPage(),
-      // SettingsPage(),
-      FollowupsDetails(),
+      SettingsPage(),
       AppointmentPage(),
+
     ];
 
     return baseScreens;

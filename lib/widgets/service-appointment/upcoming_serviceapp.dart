@@ -4,6 +4,8 @@ import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:smartcare/config/component/colors.dart';
 import 'package:smartcare/config/component/font.dart';
+import 'package:smartcare/pages/single_enquiry.dart';
+import 'package:smartcare/popups_widget/reminder_popup.dart';
 
 class UpcomingServiceapp extends StatelessWidget {
   UpcomingServiceapp({super.key});
@@ -134,137 +136,237 @@ class _DummyFollowupItemState extends State<DummyFollowupItem>
     super.dispose();
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        print("Tapped on ${widget.name}");
-      },
-      // child: _buildFollowupCard(context),
-      child: Container(
-        margin: EdgeInsets.all(5),
-        decoration: BoxDecoration(),
-        child: _buildFollowupCard(context),
-      ),
-    );
-  }
-
-  Widget _buildFollowupCard(BuildContext context) {
-    return Slidable(
-      key: ValueKey(widget.leadId),
-      controller: _slidableController,
-      startActionPane: ActionPane(
-        motion: const ScrollMotion(),
-        extentRatio: 0.40,
-        children: [
-          ReusableSlidableAction(
-            onPressed: () {},
-            backgroundColor: AppColors.sideRed,
-            icon: Icons.notifications,
-            hasBorderRadius: true,
+@override
+Widget build(BuildContext context) {
+  return InkWell(
+    onTap: () {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => FollowupsDetails(
+            title: "Upcoming",   // 👈 show “Upcoming” instead of “Follow-ups”
+            name: widget.name,
+            email: "demo@email.com",   // if you have email in your map, pass it here
+            vehicle: widget.vehicle,
+            purchaseDate: "01 Jan 2023", // you can add these fields in dummyFollowups too
+            nextServiceDate: "15 Sep 2025",
+            dealership: "Pune Cars",
+            fuelType: "Petrol",
+            location: "Pune",
+            leadId: widget.leadId,
           ),
-          // SlidableAction(
-          //   onPressed: (context) =>
-          //       () {}, //showReminderPopup(context, widget.name),
-          //   backgroundColor: Colors.redAccent,
-          //   foregroundColor: Colors.white,
-          //   icon: Icons.notifications,
-          //   borderRadius: const BorderRadius.only(
-          //     topLeft: Radius.circular(16),
-          //     bottomLeft: Radius.circular(16),
-          //   ),
-          // ),
-          ReusableSlidableAction(
-            onPressed: () {},
-            backgroundColor: AppColors.starColorsYellow,
-            icon: Icons.star_rounded,
-          ),
-          // const SlidableAction(
-          //   onPressed: null,
-          //   backgroundColor: Color(0xFFFFD641),
-          //   foregroundColor: Colors.white,
-          //   icon: Icons.star_rounded,
-          // ),
-        ],
-      ),
-      endActionPane: ActionPane(
-        motion: ScrollMotion(),
-        extentRatio: 0.40,
-        children: [
-          ReusableSlidableActionRight(
-            onPressed: () {},
-            backgroundColor: AppColors.sideGreen,
-            icon: Icons.phone,
-            hasBorderRadius: false,
-          ),
-          // SlidableAction(
-          //   onPressed: null,
-          //   backgroundColor: Color(0xFF36D399), // green
-          //   foregroundColor: Colors.white,
-          //   icon: Icons.phone,
-          // ),
-          ReusableSlidableActionRight(
-            onPressed: () {},
-            backgroundColor: AppColors.headerBlackTheme,
-            icon: Icons.edit,
-            hasBorderRadius: true,
-          ),
-          // SlidableAction(
-          //   onPressed: null,
-          //   backgroundColor: Color(0xFF212E51), // navy
-          //   foregroundColor: Colors.white,
-          //   icon: Icons.edit,
-          //   borderRadius: BorderRadius.only(
-          //     topRight: Radius.circular(16), // curved end cap
-          //     bottomRight: Radius.circular(16),
-          //   ),
-          // ),
-        ],
-      ),
-
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
-        decoration: BoxDecoration(
-          color: Color(0xFFF7F8FC),
-          borderRadius: BorderRadius.circular(5),
         ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Expanded(
-              child: Row(
-                children: [
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            _buildUserDetails(context),
-                            _buildVerticalDivider(15),
-                            _buildCarModel(context),
-                          ],
-                        ),
-                        const SizedBox(height: 2),
-                        Row(
-                          children: [
-                            _buildSubjectDetails(context),
-                            _buildDate(context),
-                          ],
-                        ),
-                      ],
-                    ),
+      );
+    },
+    child: Container(
+      margin: const EdgeInsets.all(1),
+      child: _buildFollowupCard(context),
+    ),
+  );
+}
+
+Widget _buildFollowupCard(BuildContext context) {
+  return Slidable(
+    key: ValueKey(widget.leadId),
+    controller: _slidableController,
+    startActionPane: ActionPane(
+      motion: const ScrollMotion(),
+      extentRatio: 0.40,
+      children: [
+        ReusableSlidableAction(
+          onPressed: () {
+            showReminderPopup(context, widget.name);
+          },
+          backgroundColor: AppColors.sideRed,
+          icon: Icons.notifications,
+          hasBorderRadius: true,
+        ),
+        ReusableSlidableAction(
+          onPressed: widget.onToggleFavorite,
+          backgroundColor: AppColors.starColorsYellow,
+          icon: Icons.star_rounded,
+        ),
+      ],
+    ),
+    endActionPane: ActionPane(
+      motion: const ScrollMotion(),
+      extentRatio: 0.40,
+      children: [
+        ReusableSlidableActionRight(
+          onPressed: () => _phoneAction(),
+          backgroundColor: AppColors.sideGreen,
+          icon: Icons.phone,
+        ),
+        ReusableSlidableActionRight(
+          onPressed: () => _editAction(),
+          backgroundColor: AppColors.headerBlackTheme,
+          icon: Icons.edit,
+          hasBorderRadius: true,
+        ),
+      ],
+    ),
+
+    // ✅ Copied UI style from UpcomingFollowups
+    child: Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+      decoration: BoxDecoration(
+        color: _isActionPaneOpen
+            ? AppColors.backgroundLightGrey
+            : Colors.transparent, // same as Upcoming
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(
+            child: Row(
+              children: [
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          _buildUserDetails(context),
+                          _buildVerticalDivider(15),
+                          _buildCarModel(context),
+                        ],
+                      ),
+                      const SizedBox(height: 2),
+                      Row(
+                        children: [
+                          _buildSubjectDetails(context),
+                          _buildDate(context),
+                        ],
+                      ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-            _buildNavigationButton(context),
-          ],
-        ),
+          ),
+          _buildNavigationButton(context),
+        ],
       ),
-    );
-  }
+    ),
+  );
+}
+
+  // Widget _buildFollowupCard(BuildContext context) {
+  //   return Slidable(
+  //     key: ValueKey(widget.leadId),
+  //     controller: _slidableController,
+  //     startActionPane: ActionPane(
+  //       motion: const ScrollMotion(),
+  //       extentRatio: 0.40,
+  //       children: [
+  //         ReusableSlidableAction(
+  //           onPressed: () {showReminderPopup(context, widget.name);},
+  //           backgroundColor: AppColors.sideRed,
+  //           icon: Icons.notifications,
+  //           hasBorderRadius: true,
+  //         ),
+  //         // SlidableAction(
+  //         //   onPressed: (context) =>
+  //         //       () {}, //showReminderPopup(context, widget.name),
+  //         //   backgroundColor: Colors.redAccent,
+  //         //   foregroundColor: Colors.white,
+  //         //   icon: Icons.notifications,
+  //         //   borderRadius: const BorderRadius.only(
+  //         //     topLeft: Radius.circular(16),
+  //         //     bottomLeft: Radius.circular(16),
+  //         //   ),
+  //         // ),
+  //         ReusableSlidableAction(
+  //           onPressed: () {},
+  //           backgroundColor: AppColors.starColorsYellow,
+  //           icon: Icons.star_rounded,
+  //         ),
+  //         // const SlidableAction(
+  //         //   onPressed: null,
+  //         //   backgroundColor: Color(0xFFFFD641),
+  //         //   foregroundColor: Colors.white,
+  //         //   icon: Icons.star_rounded,
+  //         // ),
+  //       ],
+  //     ),
+  //     endActionPane: ActionPane(
+  //       motion: ScrollMotion(),
+  //       extentRatio: 0.40,
+  //       children: [
+  //         ReusableSlidableActionRight(
+  //           onPressed: () {},
+  //           backgroundColor: AppColors.sideGreen,
+  //           icon: Icons.phone,
+  //           hasBorderRadius: false,
+  //         ),
+  //         // SlidableAction(
+  //         //   onPressed: null,
+  //         //   backgroundColor: Color(0xFF36D399), // green
+  //         //   foregroundColor: Colors.white,
+  //         //   icon: Icons.phone,
+  //         // ),
+  //         ReusableSlidableActionRight(
+  //           onPressed: () {},
+  //           backgroundColor: AppColors.headerBlackTheme,
+  //           icon: Icons.edit,
+  //           hasBorderRadius: true,
+  //         ),
+  //         // SlidableAction(
+  //         //   onPressed: null,
+  //         //   backgroundColor: Color(0xFF212E51), // navy
+  //         //   foregroundColor: Colors.white,
+  //         //   icon: Icons.edit,
+  //         //   borderRadius: BorderRadius.only(
+  //         //     topRight: Radius.circular(16), // curved end cap
+  //         //     bottomRight: Radius.circular(16),
+  //         //   ),
+  //         // ),
+  //       ],
+  //     ),
+
+  //     child: Container(
+  //       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+  //       decoration: BoxDecoration(
+  //         color: Color(0xFFF7F8FC),
+  //         borderRadius: BorderRadius.circular(5),
+  //       ),
+  //       child: Row(
+  //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //         children: [
+  //           Expanded(
+  //             child: Row(
+  //               children: [
+  //                 const SizedBox(width: 8),
+  //                 Expanded(
+  //                   child: Column(
+  //                     crossAxisAlignment: CrossAxisAlignment.start,
+  //                     children: [
+  //                       Row(
+  //                         children: [
+  //                           _buildUserDetails(context),
+  //                           _buildVerticalDivider(15),
+  //                           _buildCarModel(context),
+  //                         ],
+  //                       ),
+  //                       const SizedBox(height: 2),
+  //                       Row(
+  //                         children: [
+  //                           _buildSubjectDetails(context),
+  //                           _buildDate(context),
+  //                         ],
+  //                       ),
+  //                     ],
+  //                   ),
+  //                 ),
+  //               ],
+  //             ),
+  //           ),
+  //           _buildNavigationButton(context),
+  //         ],
+  //       ),
+  //     ),
+  //   );
+  // }
 
   Widget _buildNavigationButton(BuildContext context) {
     return GestureDetector(

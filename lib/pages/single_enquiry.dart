@@ -1,3 +1,645 @@
+// import 'dart:convert';
+// import 'package:flutter/material.dart';
+// import 'package:flutter/services.dart';
+// import 'package:flutter_svg/svg.dart';
+// import 'package:get/get.dart';
+// import 'package:google_fonts/google_fonts.dart';
+// import 'package:intl/intl.dart';
+// import 'package:smartcare/config/component/colors.dart';
+
+// class FollowupsDetails extends StatefulWidget {
+//   final String name;
+//   final String email;
+//   final String vehicle;
+//   final String purchaseDate;
+//   final String nextServiceDate;
+//   final String dealership;
+//   final String fuelType;
+//   final String location;
+//   final String leadId;
+
+//   FollowupsDetails({
+//     super.key,
+//     required this.name,
+//     required this.email,
+//     required this.vehicle,
+//     required this.purchaseDate,
+//     required this.nextServiceDate,
+//     required this.dealership,
+//     required this.fuelType,
+//     required this.location,
+//     required this.leadId,
+//   });
+
+//   @override
+//   State<FollowupsDetails> createState() => _FollowupsDetailsState();
+// }
+
+// class _FollowupsDetailsState extends State<FollowupsDetails> {
+//   bool isLoading = false;
+//   int _selectedTabIndex = 0;
+//   int overdueCount = 0;
+//   bool _isExpanded = true;
+//   late ScrollController scrollController;
+
+//   // Sample tasks
+//   List<Map<String, dynamic>> upcomingTasks = [
+//     {
+//       'type': 'email',
+//       'title': 'Send Email',
+//       'description': 'Send a follow-up email for Scheduled Oil & Filter Change',
+//       'date': 'Sept 15, 2025',
+//       'icon': Icons.email,
+//       'color': Colors.white,
+//       'backgroundColor': Colors.red,
+//     },
+//     {
+//       'type': 'whatsapp',
+//       'title': 'Send WhatsApp MSG',
+//       'description': 'Send a follow-up message for Brake Pad Inspection',
+//       'date': 'Sept 15, 2025',
+//       'icon': Icons.message,
+//       'color': Colors.white,
+//       'backgroundColor': Colors.green,
+//     },
+//     {
+//       'type': 'email',
+//       'title': 'Send Email',
+//       'description': 'Send a follow-up email for Scheduled Oil & Filter Change',
+//       'date': 'Sept 14, 2025',
+//       'icon': Icons.email,
+//       'color': Colors.white,
+//       'backgroundColor': Colors.red,
+//     },
+//   ];
+
+//   List<Map<String, dynamic>> completedTasks = [
+//     {
+//       'type': 'email',
+//       'title': 'Send Email',
+//       'description': 'Follow-up email sent for Service Reminder',
+//       'date': 'Sept 10, 2025',
+//       'icon': Icons.email,
+//       'color': Colors.white,
+//       'backgroundColor': Colors.red,
+//     },
+//   ];
+
+//   List<Map<String, dynamic>> overdueTasks = [
+//     {
+//       'type': 'call',
+//       'title': 'Make Call',
+//       'description': 'Follow-up call for Service Booking',
+//       'date': 'Sept 8, 2025',
+//       'icon': Icons.phone,
+//       'color': Colors.white,
+//       'backgroundColor': Colors.orange,
+//     },
+//   ];
+
+//   // 📅 Format date for headers like "15th Sept"
+//   String formatDateHeader(String rawDate) {
+//     try {
+//       DateTime parsed = DateFormat("MMM dd, yyyy").parse(rawDate);
+//       String day = DateFormat("d").format(parsed); // 15
+//       String month = DateFormat("MMM").format(parsed); // Sept
+
+//       // suffix logic
+//       String suffix = "th";
+//       if (!(day.endsWith("11") || day.endsWith("12") || day.endsWith("13"))) {
+//         if (day.endsWith("1")) suffix = "st";
+//         else if (day.endsWith("2")) suffix = "nd";
+//         else if (day.endsWith("3")) suffix = "rd";
+//       }
+
+//       return "$day$suffix $month";
+//     } catch (e) {
+//       return rawDate;
+//     }
+//   }
+
+//   // 📅 Header widget
+//   Widget buildDateHeader(String rawDate) {
+//     String formatted = formatDateHeader(rawDate);
+
+//     final regex = RegExp(r'(\d+)(st|nd|rd|th)?\s(\w+)');
+//     final match = regex.firstMatch(formatted);
+
+//     if (match == null) {
+//       return Text(formatted,
+//           style: GoogleFonts.inter(
+//               fontSize: 14, fontWeight: FontWeight.w600, color: Colors.black));
+//     }
+
+//     String day = match.group(1) ?? "";
+//     String suffix = match.group(2) ?? "";
+//     String month = match.group(3) ?? "";
+
+//     return Padding(
+//       padding: const EdgeInsets.only(bottom: 8, top: 12),
+//       child: RichText(
+//         text: TextSpan(
+//           children: [
+//             TextSpan(
+//               text: day,
+//               style: GoogleFonts.inter(
+//                 fontSize: 16,
+//                 fontWeight: FontWeight.w700,
+//                 color: Colors.black,
+//               ),
+//             ),
+//             TextSpan(
+//               text: suffix,
+//               style: GoogleFonts.inter(
+//                 fontSize: 10,
+//                 fontWeight: FontWeight.w400,
+//                 color: Colors.black,
+//               ),
+//             ),
+//             TextSpan(
+//               text: " $month",
+//               style: GoogleFonts.inter(
+//                 fontSize: 16,
+//                 fontWeight: FontWeight.w600,
+//                 color: Colors.black,
+//               ),
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       backgroundColor: Color(0xFFF8F9FA),
+//       appBar: AppBar(
+//         automaticallyImplyLeading: false,
+//         backgroundColor: Colors.white,
+//         elevation: 0,
+//         leading: IconButton(
+//           icon: Icon(Icons.arrow_back, color: Colors.black),
+//           onPressed: () => Navigator.of(context).pop(),
+//         ),
+//         title: Text(
+//           'Follow-ups',
+//           style: GoogleFonts.poppins(
+//             color: Colors.black,
+//             fontSize: 20,
+//             fontWeight: FontWeight.w500,
+//           ),
+//         ),
+//       ),
+//       body: SingleChildScrollView(
+//         child: Column(
+//           children: [
+//             // Customer Info Card
+//             Container(
+//               margin: EdgeInsets.all(15),
+//               padding: const EdgeInsets.all(15),
+//               decoration: BoxDecoration(
+//                 color: Colors.white,
+//                 borderRadius: BorderRadius.circular(8),
+//                 boxShadow: [
+//                   BoxShadow(
+//                     color: Colors.grey.withOpacity(0.1),
+//                     spreadRadius: 1,
+//                     blurRadius: 6,
+//                     offset: const Offset(0, 2),
+//                   ),
+//                 ],
+//               ),
+//               child: Column(
+//                 children: [
+//                   Row(
+//                     children: [
+//                       Expanded(
+//                         child: Column(
+//                           crossAxisAlignment: CrossAxisAlignment.start,
+//                           children: [
+//                             Row(
+//                               children: [
+//                                Text(
+//   widget.name,
+//   style: GoogleFonts.montserrat(
+//     fontSize: 20,
+//     fontWeight: FontWeight.w600,
+//     color: Color(0xFF212E51), // ✅ replaced color
+//   ),
+// ),
+
+//                                 const SizedBox(width: 2),
+//                                 Container(
+//                                     width: 1,
+//                                     height: 15,
+//                                     color: Colors.grey[300],
+//                                     margin:
+//                                         EdgeInsets.symmetric(horizontal: 7)),
+//                                 Text(widget.email,
+//                                     style: GoogleFonts.inter(
+//                                         fontSize: 12,
+//                                         color: Colors.grey[600])),
+//                               ],
+//                             ),
+//                             const SizedBox(height: 4),
+//                             Text(widget.vehicle,
+//                                 style: GoogleFonts.inter(
+//                                     fontSize: 12, color: Colors.grey[600])),
+//                           ],
+//                         ),
+//                       ),
+//                     ],
+//                   ),
+//                   const SizedBox(height: 10),
+//                   // Purchase + Next Service + Dealership
+//                   Container(
+//                     padding: const EdgeInsets.all(6),
+//                     decoration: BoxDecoration(
+//                       color: AppColors.white,
+//                       borderRadius: BorderRadius.circular(10),
+//                       boxShadow: [
+//                         BoxShadow(
+//                           color: Colors.grey.withOpacity(0.1),
+//                           spreadRadius: 1,
+//                           blurRadius: 6,
+//                           offset: const Offset(0, 2),
+//                         ),
+//                       ],
+//                     ),
+//                     child: Row(
+//                       children: [
+// Expanded(
+//   child: Column(
+//     crossAxisAlignment: CrossAxisAlignment.start,
+//     children: [
+//       Text(
+//         'Purchase date',
+//         style: GoogleFonts.montserrat(
+//           fontSize: 10,
+//                fontWeight: FontWeight.w500,
+//           color: Color(0xFF52518B),// ✅ custom color added
+//         ),
+//       ),
+//       SizedBox(height: 4),
+//       Text(
+//         widget.purchaseDate,
+//         style: GoogleFonts.montserrat(
+//           fontSize: 12,
+//           fontWeight: FontWeight.w500,
+//               color: Colors.grey[600], 
+//         ),
+//       ),
+//     ],
+//   ),
+// ),
+
+//                         Container(
+//                             width: 1,
+//                             height: 30,
+//                             color: Colors.grey[300],
+//                             margin: EdgeInsets.symmetric(horizontal: 7)),
+//                         Expanded(
+//                           child: Column(
+//                               crossAxisAlignment: CrossAxisAlignment.start,
+//                               children: [
+//                                 Text('Next Service',
+//                                   style: GoogleFonts.montserrat(
+//           fontSize: 10,
+//                fontWeight: FontWeight.w500,
+//           color: Color(0xFF52518B),// ✅ custom color added
+//         ),),
+//                                 Text(widget.nextServiceDate,
+//                                     style: GoogleFonts.inter(
+//                                         fontSize: 12,
+//                                         fontWeight: FontWeight.w400)),
+//                               ]),
+//                         ),
+//                         Container(
+//                             width: 1,
+//                             height: 30,
+//                             color: Colors.grey[300],
+//                             margin: EdgeInsets.symmetric(horizontal: 7)),
+//                         Expanded(
+//                           child: Column(
+//                               crossAxisAlignment: CrossAxisAlignment.start,
+//                               children: [
+//                                 Text('Dealership',
+//                                      style: GoogleFonts.montserrat(
+//           fontSize: 10,
+//                fontWeight: FontWeight.w500,
+//           color: Color(0xFF52518B),// ✅ custom color added
+//         ),),
+//                                 Text(widget.dealership,
+//                                     style: GoogleFonts.inter(
+//                                         fontSize: 11,
+//                                         fontWeight: FontWeight.w400)),
+//                               ]),
+//                         ),
+//                       ],
+//                     ),
+//                   ),
+//                   const SizedBox(height: 1),
+//                   // Fuel + Location + Car Image
+//                   Row(
+//                     mainAxisAlignment: MainAxisAlignment.start,
+//                     children: [
+//                       Container(
+//                         margin: EdgeInsets.only(left: 1),
+//                         padding: const EdgeInsets.symmetric(
+//                             horizontal: 5, vertical: 10),
+//                         decoration: BoxDecoration(
+//                           color: AppColors.white,
+//                           borderRadius: BorderRadius.circular(8),
+//                           boxShadow: [
+//                             BoxShadow(
+//                               color: Colors.grey.withOpacity(0.1),
+//                               spreadRadius: 1,
+//                               blurRadius: 6,
+//                               offset: const Offset(0, 2),
+//                             ),
+//                           ],
+//                         ),
+//                         child: Row(
+//                           mainAxisSize: MainAxisSize.min,
+//                           children: [
+//                             Column(
+//                               crossAxisAlignment: CrossAxisAlignment.start,
+//                               children: [
+//                                 Text('Fuel type',
+//                                      style: GoogleFonts.montserrat(
+//           fontSize: 10,
+//                fontWeight: FontWeight.w500,
+//           color: Color(0xFF52518B),// ✅ custom color added
+//         ),),
+//                                 SizedBox(height: 2),
+//                                 Text(widget.fuelType,
+//                                     style: GoogleFonts.inter(
+//                                         fontSize: 12,
+//                                         fontWeight: FontWeight.w500)),
+//                               ],
+//                             ),
+//                             Container(
+//                                 width: 1,
+//                                 height: 20,
+//                                 color: Colors.grey[300],
+//                                 margin: EdgeInsets.symmetric(horizontal: 6)),
+//                             Column(
+//                               crossAxisAlignment: CrossAxisAlignment.start,
+//                               children: [
+//                                 Text('Location',
+//                                     style: GoogleFonts.montserrat(
+//           fontSize: 10,
+//                fontWeight: FontWeight.w500,
+//           color: Color(0xFF52518B),// ✅ custom color added
+//         ),),
+//                                 SizedBox(height: 2),
+//                                 Text(widget.location,
+//                                     style: GoogleFonts.inter(
+//                                         fontSize: 12,
+//                                         fontWeight: FontWeight.w500)),
+//                               ],
+//                             ),
+//                           ],
+//                         ),
+//                       ),
+//                       Spacer(),
+//                       Image.asset(
+//                         "assets/car.png",
+//                         width: MediaQuery.of(context).size.width * 0.55,
+//                         height: 80,
+//                         fit: BoxFit.contain,
+//                       )
+//                     ],
+//                   ),
+//                 ],
+//               ),
+//             ),
+//             const SizedBox(height: 16),
+//             // Tabs Section
+//             Container(
+//               decoration: BoxDecoration(
+//                 color: Colors.white,
+//                 borderRadius: BorderRadius.circular(12),
+//                 boxShadow: [
+//                   BoxShadow(
+//                     color: Colors.grey.withOpacity(0.1),
+//                     spreadRadius: 1,
+//                     blurRadius: 6,
+//                     offset: const Offset(0, 2),
+//                   ),
+//                 ],
+//               ),
+//               child: Column(
+//                 children: [
+//                   Container(
+//                     padding: const EdgeInsets.all(16),
+//                     child: Row(
+//                       children: [
+//                         Expanded(
+//                           child: GestureDetector(
+//                             onTap: () => setState(() => _selectedTabIndex = 0),
+//                             child: Text('Upcoming',
+//                                 textAlign: TextAlign.center,
+//                                 style: GoogleFonts.inter(
+//                                   fontSize: 15,
+//                                   fontWeight: _selectedTabIndex == 0
+//                                       ? FontWeight.w600
+//                                       : FontWeight.normal,
+//                                   color: _selectedTabIndex == 0
+//                                       ? Colors.black87
+//                                       : Colors.grey[600],
+//                                 )),
+//                           ),
+//                         ),
+//                         Expanded(
+//                           child: GestureDetector(
+//                             onTap: () => setState(() => _selectedTabIndex = 1),
+//                             child: Text('Completed',
+//                                 textAlign: TextAlign.center,
+//                                 style: GoogleFonts.inter(
+//                                   fontSize: 15,
+//                                   fontWeight: _selectedTabIndex == 1
+//                                       ? FontWeight.w600
+//                                       : FontWeight.normal,
+//                                   color: _selectedTabIndex == 1
+//                                       ? Colors.black87
+//                                       : Colors.grey[600],
+//                                 )),
+//                           ),
+//                         ),
+//                         Expanded(
+//                           child: GestureDetector(
+//                             onTap: () => setState(() => _selectedTabIndex = 2),
+//                             child: Text('Overdue',
+//                                 textAlign: TextAlign.center,
+//                                 style: GoogleFonts.inter(
+//                                   fontSize: 15,
+//                                   fontWeight: _selectedTabIndex == 2
+//                                       ? FontWeight.w600
+//                                       : FontWeight.normal,
+//                                   color: _selectedTabIndex == 2
+//                                       ? Colors.black87
+//                                       : Colors.grey[600],
+//                                 )),
+//                           ),
+//                         ),
+//                         GestureDetector(
+//                           onTap: () {
+//                             setState(() {
+//                               _isExpanded = !_isExpanded;
+//                             });
+//                           },
+//                           child: Icon(
+//                             _isExpanded
+//                                 ? Icons.keyboard_arrow_up
+//                                 : Icons.keyboard_arrow_down,
+//                             color: Colors.grey[600],
+//                             size: 24,
+//                           ),
+//                         )
+//                       ],
+//                     ),
+//                   ),
+//                   if (_isExpanded)
+//                     Padding(
+//                       padding: const EdgeInsets.all(15),
+//                       child: _buildTasksList(),
+//                     ),
+//                 ],
+//               ),
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+
+//   // Build grouped tasks with date headers
+//   Widget _buildTasksList() {
+//     List<Map<String, dynamic>> currentTasks;
+//     switch (_selectedTabIndex) {
+//       case 0:
+//         currentTasks = upcomingTasks;
+//         break;
+//       case 1:
+//         currentTasks = completedTasks;
+//         break;
+//       case 2:
+//         currentTasks = overdueTasks;
+//         break;
+//       default:
+//         currentTasks = upcomingTasks;
+//     }
+
+//     if (currentTasks.isEmpty) {
+//       return Text("No tasks available",
+//           style: GoogleFonts.inter(fontSize: 12));
+//     }
+
+//     // Group by date
+//     Map<String, List<Map<String, dynamic>>> groupedTasks = {};
+//     for (var task in currentTasks) {
+//       String date = task['date'] ?? '';
+//       if (!groupedTasks.containsKey(date)) {
+//         groupedTasks[date] = [];
+//       }
+//       groupedTasks[date]!.add(task);
+//     }
+// return Column(
+//   crossAxisAlignment: CrossAxisAlignment.start,
+//   children: groupedTasks.entries.map((entry) {
+//     return Column(
+//       crossAxisAlignment: CrossAxisAlignment.start,
+//       children: [
+//         buildDateHeader(entry.key),
+
+//         // 👇 Add spacing between date and box
+//         const SizedBox(height: 20),
+
+//         Column(
+//           children: entry.value.map((task) => _buildTaskItem(task)).toList(),
+//         ),
+//       ],
+//     );
+//   }).toList(),
+// );
+//   }
+
+//   Widget _buildTaskItem(Map<String, dynamic> task) {
+//     return Container(
+//       margin: const EdgeInsets.only(bottom: 20),
+//       padding: const EdgeInsets.all(12),
+//       decoration: BoxDecoration(
+//         color: Colors.white,
+//         borderRadius: BorderRadius.circular(8),
+//         border: Border.all(color: Colors.grey.withOpacity(0.2)),
+//         boxShadow: [
+//           BoxShadow(
+//             color: Colors.grey.withOpacity(0.7),
+//             spreadRadius: 1,
+//             blurRadius: 2.0,
+//             offset: const Offset(0, 2),
+//           ),
+//         ],
+//       ),
+//       child: Row(
+//         children: [
+//           CircleAvatar(
+//             backgroundColor: task['backgroundColor'],
+//             radius: 16,
+//             child: Icon(task['icon'], color: task['color'], size: 16),
+//           ),
+//           const SizedBox(width: 12),
+//           Expanded(
+//             child: Column(
+//               crossAxisAlignment: CrossAxisAlignment.start,
+//               children: [
+//                 // Subject (bold) + Date (regular)
+//                 RichText(
+//                   text: TextSpan(
+//                     children: [
+//                       TextSpan(
+//                         text: task['title'],
+//                         style: GoogleFonts.inter(
+//                           fontSize: 14,
+//                           fontWeight: FontWeight.w600, // Bold
+//                           color: Colors.black,
+//                           height: 1.3,
+//                         ),
+//                       ),
+//                       TextSpan(
+//                         text: " • ${task['date']}",
+//                         style: GoogleFonts.inter(
+//                           fontSize: 12,
+//                           fontWeight: FontWeight.w400, // Regular
+//                           color: Colors.grey[700],
+//                           height: 1.3,
+//                         ),
+//                       ),
+//                     ],
+//                   ),
+//                 ),
+//                 const SizedBox(height: 4),
+//                 Text(
+//                   task['description'],
+//                   style: GoogleFonts.inter(
+//                     fontSize: 12,
+//                     fontWeight: FontWeight.w400,
+//                     color: Colors.grey[600],
+//                     height: 1.3,
+//                   ),
+//                 ),
+//               ],
+//             ),
+//           )
+//         ],
+//       ),
+//     );
+//   }
+// }
+
+
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -6,10 +648,32 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:smartcare/config/component/colors.dart';
-import 'package:smartcare/config/component/font.dart';
 
 class FollowupsDetails extends StatefulWidget {
-  FollowupsDetails({super.key});
+  final String title;
+  final String name;
+  final String email;
+  final String vehicle;
+  final String purchaseDate;
+  final String nextServiceDate;
+  final String dealership;
+  final String fuelType;
+  final String location;
+  final String leadId;
+
+  FollowupsDetails({
+    super.key,
+    this.title = "Follow-ups",
+    required this.name,
+    required this.email,
+    required this.vehicle,
+    required this.purchaseDate,
+    required this.nextServiceDate,
+    required this.dealership,
+    required this.fuelType,
+    required this.location,
+    required this.leadId,
+  });
 
   @override
   State<FollowupsDetails> createState() => _FollowupsDetailsState();
@@ -17,17 +681,12 @@ class FollowupsDetails extends StatefulWidget {
 
 class _FollowupsDetailsState extends State<FollowupsDetails> {
   bool isLoading = false;
-  int _selectedTabIndex = 0; // 0: Upcoming, 1: Completed, 2: Overdue
-  Widget _selectedTaskWidget = Container();
-
+  int _selectedTabIndex = 0;
   int overdueCount = 0;
-
-  bool _isHidden = false;
-  bool _isHiddenTop = true;
+  bool _isExpanded = true;
   late ScrollController scrollController;
-  String leadId = '';
 
-  // Sample data for tasks
+  // Sample tasks
   List<Map<String, dynamic>> upcomingTasks = [
     {
       'type': 'email',
@@ -47,13 +706,21 @@ class _FollowupsDetailsState extends State<FollowupsDetails> {
       'color': Colors.white,
       'backgroundColor': Colors.green,
     },
+    {
+      'type': 'email',
+      'title': 'Send Email',
+      'description': 'Send a follow-up email for Scheduled Oil & Filter Change',
+      'date': 'Sept 14, 2025',
+      'icon': Icons.email,
+      'color': Colors.white,
+      'backgroundColor': Colors.red,
+    },
   ];
 
   List<Map<String, dynamic>> completedTasks = [
     {
       'type': 'email',
       'title': 'Send Email',
-      // 'date': 'Sep 15, 2025' ,
       'description': 'Follow-up email sent for Service Reminder',
       'date': 'Sept 10, 2025',
       'icon': Icons.email,
@@ -66,7 +733,6 @@ class _FollowupsDetailsState extends State<FollowupsDetails> {
     {
       'type': 'call',
       'title': 'Make Call',
-
       'description': 'Follow-up call for Service Booking',
       'date': 'Sept 8, 2025',
       'icon': Icons.phone,
@@ -75,1002 +741,598 @@ class _FollowupsDetailsState extends State<FollowupsDetails> {
     },
   ];
 
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
-  String formatDate(String date) {
+  // 📅 Format date for headers like "15th Sept"
+  String formatDateHeader(String rawDate) {
     try {
-      final DateTime parsedDate = DateFormat("yyyy-MM-dd").parse(date);
-      return DateFormat("d MMM").format(parsedDate);
-    } catch (e) {
-      print('Error formatting date: $e');
-      return 'N/A';
-    }
-  }
+      DateTime parsed = DateFormat("MMM dd, yyyy").parse(rawDate);
+      String day = DateFormat("d").format(parsed); // 15
+      String month = DateFormat("MMM").format(parsed); // Sept
 
-  String _formatTime(String? time) {
-    if (time == null || time.isEmpty) return 'N/A';
-
-    try {
-      DateTime parsedTime = DateFormat("HH:mm").parse(time);
-      return DateFormat("hh:mm").format(parsedTime);
-    } catch (e) {
-      print("Error formatting time: $e");
-      return 'Invalid Time';
-    }
-  }
-
-  Widget _buildTaskItem(Map<String, dynamic> task) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 10),
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.4),
-            spreadRadius: 1,
-            blurRadius: 9,
-            offset: const Offset(0, 3),
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(5),
-            decoration: BoxDecoration(
-              color: task['backgroundColor'],
-              borderRadius: BorderRadius.circular(30),
-            ),
-            child: Icon(task['icon'], color: task['color'], size: 20),
-          ),
-          const SizedBox(width: 10),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Text(
-                      task['title'],
-                      style: AppFont.appbarfontmedium14Bold(context),
-                    ),
-                    Container(
-                      margin: EdgeInsets.symmetric(horizontal: 5),
-                      child: Icon(Icons.circle, size: 5),
-                    ),
-                    Text(
-                      task['date'],
-                      style: AppFont.appbarfontmedium12Theme(context),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  task['description'],
-                  style: AppFont.appbarfontsmallnewtheme(context),
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                const SizedBox(height: 4),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildTasksList() {
-    List<Map<String, dynamic>> currentTasks;
-    String emptyMessage;
-
-    switch (_selectedTabIndex) {
-      case 0:
-        currentTasks = upcomingTasks;
-        emptyMessage = "No upcoming tasks";
-        break;
-      case 1:
-        currentTasks = completedTasks;
-        emptyMessage = "No completed tasks";
-        break;
-      case 2:
-        currentTasks = overdueTasks;
-        emptyMessage = "No overdue tasks";
-        break;
-      default:
-        currentTasks = upcomingTasks;
-        emptyMessage = "No tasks";
-    }
-
-    if (currentTasks.isEmpty) {
-      return Center(
-        child: Padding(
-          padding: const EdgeInsets.all(20),
-          child: Text(
-            emptyMessage,
-            style: AppFont.appbarfontmedium12Theme(context),
-          ),
-        ),
-      );
-    }
-
-    // Group tasks by date for timeline view
-    Map<String, List<Map<String, dynamic>>> groupedTasks = {};
-    for (var task in currentTasks) {
-      String dateKey = task['date']
-          .toString()
-          .split(',')
-          .first; // Get date part
-      if (!groupedTasks.containsKey(dateKey)) {
-        groupedTasks[dateKey] = [];
+      // suffix logic
+      String suffix = "th";
+      if (!(day.endsWith("11") || day.endsWith("12") || day.endsWith("13"))) {
+        if (day.endsWith("1")) suffix = "st";
+        else if (day.endsWith("2")) suffix = "nd";
+        else if (day.endsWith("3")) suffix = "rd";
       }
-      groupedTasks[dateKey]!.add(task);
+
+      return "$day$suffix $month";
+    } catch (e) {
+      return rawDate;
+    }
+  }
+
+  // 📅 Header widget
+  Widget buildDateHeader(String rawDate) {
+    String formatted = formatDateHeader(rawDate);
+
+    final regex = RegExp(r'(\d+)(st|nd|rd|th)?\s(\w+)');
+    final match = regex.firstMatch(formatted);
+
+    if (match == null) {
+      return Text(formatted,
+          style: GoogleFonts.inter(
+              fontSize: 14, fontWeight: FontWeight.w600, color: Colors.black));
     }
 
-    return ListView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      itemCount: groupedTasks.length,
-      itemBuilder: (context, index) {
-        String dateKey = groupedTasks.keys.elementAt(index);
-        List<Map<String, dynamic>> dayTasks = groupedTasks[dateKey]!;
+    String day = match.group(1) ?? "";
+    String suffix = match.group(2) ?? "";
+    String month = match.group(3) ?? "";
 
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8, top: 12),
+      child: RichText(
+        text: TextSpan(
           children: [
-            // Date header
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10),
-              child: Text(
-                dateKey.replaceAll('Sept', 'Sep') +
-                    (dateKey.contains('15') ? 'th' : 'th'),
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.headerBlackTheme,
-                ),
+            TextSpan(
+              text: day,
+              style: GoogleFonts.inter(
+                fontSize: 16,
+                fontWeight: FontWeight.w700,
+                color: Colors.black,
               ),
             ),
-            // Tasks for this date
-            ...dayTasks.map((task) => _buildTaskItem(task)).toList(),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10),
-              child: Text(
-                dateKey.replaceAll('Sept', 'Sep') +
-                    (dateKey.contains('14') ? 'th' : 'th'),
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.headerBlackTheme,
-                ),
+            TextSpan(
+              text: suffix,
+              style: GoogleFonts.inter(
+                fontSize: 10,
+                fontWeight: FontWeight.w400,
+                color: Colors.black,
               ),
             ),
-
-            ...dayTasks.map((task) => _buildTaskItem(task)).toList(),
+            TextSpan(
+              text: " $month",
+              style: GoogleFonts.inter(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+                color: Colors.black,
+              ),
+            ),
           ],
-        );
-      },
+        ),
+      ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.backgroundLightGrey,
+      backgroundColor: Color(0xFFF8F9FA),
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        backgroundColor: AppColors.white,
-        title: Align(
-          alignment: Alignment.centerLeft,
-          child: Text(
-            'smart care',
-            textAlign: TextAlign.left,
-            style: AppFont.appbarfontblack(context),
+        backgroundColor: Colors.white,
+        elevation: 0,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+        title: Text(
+          widget.title,
+          style: GoogleFonts.poppins(
+            color: Colors.black,
+            fontSize: 20,
+            fontWeight: FontWeight.w500,
           ),
         ),
       ),
       body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(0),
-          child: Column(
-            children: [
-              // Customer Info Card
-              Container(
-                margin: EdgeInsets.all(10),
-                padding: const EdgeInsets.all(15),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Column(
-                  children: [
-                    // Profile Section
-                    Row(
-                      children: [
-                        Text(
-                          'Aarav Sharma',
-                          style: AppFont.appbarfontmedium14Bold(context),
+        child: Column(
+          children: [
+            // Customer Info Card
+            Container(
+              margin: EdgeInsets.all(15),
+              padding: const EdgeInsets.all(15),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(8),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.1),
+                    spreadRadius: 1,
+                    blurRadius: 6,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: Column(
+                children: [
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    widget.name,
+                                    style: GoogleFonts.montserrat(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w600,
+                                      color: Color(0xFF212E51),
+                                    ),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                                const SizedBox(width: 2),
+                                Container(
+                                  width: 1,
+                                  height: 15,
+                                  color: Colors.grey[300],
+                                  margin:
+                                      EdgeInsets.symmetric(horizontal: 7),
+                                ),
+                                Expanded(
+child: Text(
+  widget.email,
+  style: GoogleFonts.montserrat(
+    fontSize: 12,
+    fontWeight: FontWeight.w500, // ✅ added font weight
+    color: Colors.grey[600],
+  ),
+  maxLines: 1,
+  overflow: TextOverflow.ellipsis,
+),
+  
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              widget.vehicle,
+                              style: GoogleFonts.inter(
+                                  fontSize: 12, color: Colors.grey[600]),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
                         ),
-                        const SizedBox(width: 10),
-                        Container(
-                          width: 1,
-                          height: 20,
-                          color: AppColors.headerBlackTheme,
-                        ),
-                        const SizedBox(width: 10),
-                        Expanded(
-                          child: Text(
-                            'Aarav.sharma@gmail.com',
-                            style: AppFont.appbarfontmedium12Theme(context),
-                          ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  // Purchase + Next Service + Dealership
+                  Container(
+                    padding: const EdgeInsets.all(6),
+                    decoration: BoxDecoration(
+                      color: AppColors.white,
+                      borderRadius: BorderRadius.circular(10),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.1),
+                          spreadRadius: 1,
+                          blurRadius: 6,
+                          offset: const Offset(0, 2),
                         ),
                       ],
                     ),
-                    const SizedBox(height: 5),
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        'Discovery Sport',
-                        style: AppFont.appbarfontmedium12Theme(context),
-                      ),
-                    ),
-                    const SizedBox(height: 10),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('Purchase date',
+                                    style: GoogleFonts.montserrat(
+                                        fontSize: 10,
+                                        fontWeight: FontWeight.w500,
+                                        color: Color(0xFF52518B))),
+                                SizedBox(height: 4),
+Text(
+  widget.purchaseDate,
+  style: GoogleFonts.montserrat(   // ✅ Monstreat font applied
+    fontSize: 12,
+    fontWeight: FontWeight.w500,
 
-                    // Info Cards
-                    Container(
-                      padding: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        color: AppColors.backgroundLightGrey,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Purchase date',
-                                  style: AppFont.appbarfontsmallnewtheme(
-                                    context,
-                                  ),
-                                ),
-                                Text(
-                                  '28 Sep 2024',
-                                  style: AppFont.appbarfontmedium12Theme(
-                                    context,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Container(
-                            width: 0.5,
-                            height: 30,
-                            color: AppColors.headerBlackTheme,
-                            margin: const EdgeInsets.symmetric(horizontal: 10),
-                          ),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Next Service',
-                                  style: AppFont.appbarfontsmallnewtheme(
-                                    context,
-                                  ),
-                                ),
-                                Text(
-                                  '29th Sep 2025',
-                                  style: AppFont.appbarfontmedium12Theme(
-                                    context,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Container(
-                            width: 0.5,
-                            height: 30,
-                            color: AppColors.headerBlackTheme,
-                            margin: const EdgeInsets.symmetric(horizontal: 10),
-                          ),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Dealership',
-                                  style: AppFont.appbarfontsmallnewtheme(
-                                    context,
-                                  ),
-                                ),
-                                Text(
-                                  'Mumbai -Navneet',
-                                  style: AppFont.appbarfontmedium12Theme(
-                                    context,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 10),
+  ),
+  maxLines: 1,
+  overflow: TextOverflow.ellipsis,
+),
 
-                    // Additional Info
-                    Container(
-                      padding: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        color: AppColors.backgroundLightGrey,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Fuel type',
-                                  style: AppFont.appbarfontsmallnewtheme(
-                                    context,
-                                  ),
-                                ),
-                                Text(
-                                  'EV',
-                                  style: AppFont.appbarfontmedium12Theme(
-                                    context,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Container(
-                            width: 0.5,
+                              ]),
+                        ),
+                        Container(
+                            width: 1,
                             height: 30,
-                            color: AppColors.headerBlackTheme,
-                            margin: const EdgeInsets.symmetric(horizontal: 10),
-                          ),
-                          Expanded(
-                            child: Column(
+                            color: Colors.grey[300],
+                            margin: EdgeInsets.symmetric(horizontal: 7)),
+                        Expanded(
+                          child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
+                                Text('Next Service',
+                                    style: GoogleFonts.montserrat(
+                                        fontSize: 10,
+                                        fontWeight: FontWeight.w500,
+                                        color: Color(0xFF52518B))),
+Text(
+  widget.nextServiceDate,
+  style: GoogleFonts.montserrat(   // ✅ Monstreat font applied
+    fontSize: 12,
+    fontWeight: FontWeight.w500,
+
+  ),
+  maxLines: 1,
+  overflow: TextOverflow.ellipsis,
+),
+
+                              ]),
+                        ),
+                        Container(
+                            width: 1,
+                            height: 30,
+                            color: Colors.grey[300],
+                            margin: EdgeInsets.symmetric(horizontal: 7)),
+                        Expanded(
+                          child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('Dealership',
+                                    style: GoogleFonts.montserrat(
+                                        fontSize: 10,
+                                        fontWeight: FontWeight.w500,
+                                        color: Color(0xFF52518B))),
+Text(
+ widget.dealership,
+  style: GoogleFonts.montserrat(   // ✅ Monstreat font applied
+    fontSize: 12,
+    fontWeight: FontWeight.w500,
+
+  ),
+  maxLines: 1,
+  overflow: TextOverflow.ellipsis,
+),
+
+                              ]),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 1),
+                  // Fuel + Location + Car Image
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Container(
+                        margin: EdgeInsets.only(left: 1),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 5, vertical: 10),
+                        decoration: BoxDecoration(
+                          color: AppColors.white,
+                          borderRadius: BorderRadius.circular(8),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.1),
+                              spreadRadius: 1,
+                              blurRadius: 6,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('Fuel type',
+                                    style: GoogleFonts.montserrat(
+                                        fontSize: 10,
+                                        fontWeight: FontWeight.w500,
+                                        color: Color(0xFF52518B))),
+                                SizedBox(height: 2),
                                 Text(
-                                  'Location',
-                                  style: AppFont.appbarfontsmallnewtheme(
-                                    context,
-                                  ),
-                                ),
-                                Text(
-                                  'Malad',
-                                  style: AppFont.appbarfontmedium12Theme(
-                                    context,
-                                  ),
-                                ),
+ widget.fuelType,
+  style: GoogleFonts.montserrat(   // ✅ Monstreat font applied
+    fontSize: 12,
+    fontWeight: FontWeight.w500,
+  ),
+  maxLines: 1,
+  overflow: TextOverflow.ellipsis,
+),
+                                // Text(widget.fuelType,
+                                //     style: GoogleFonts.inter(
+                                //         fontSize: 12,
+                                //         fontWeight: FontWeight.w500),
+                                //     maxLines: 1,
+                                //     overflow: TextOverflow.ellipsis),
                               ],
                             ),
-                          ),
-                          Expanded(
-                            child: Container(
-                              alignment: Alignment.centerRight,
-                              width: 200,
-                              // height: 200,
-                              decoration: BoxDecoration(
-                                // border: Border.all(color: Colors.black12),
-                                shape: BoxShape.circle,
-                              ),
-                              child: Image.asset(
-                                "assets/car.png", // 👈 replace with your PNG path
-                                fit: BoxFit
-                                    .contain, // makes sure it scales properly
-                              ),
+                            Container(
+                                width: 1,
+                                height: 20,
+                                color: Colors.grey[300],
+                                margin: EdgeInsets.symmetric(horizontal: 6)),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('Location',
+                                    style: GoogleFonts.montserrat(
+                                        fontSize: 10,
+                                        fontWeight: FontWeight.w500,
+                                        color: Color(0xFF52518B))),
+                                SizedBox(height: 2),
+Text(
+ widget.location,
+  style: GoogleFonts.montserrat(   // ✅ Monstreat font applied
+    fontSize: 12,
+    fontWeight: FontWeight.w500,
+
+  ),
+  maxLines: 1,
+  overflow: TextOverflow.ellipsis,
+),
+
+                                // Text(widget.location,
+                                //     style: GoogleFonts.inter(
+                                //         fontSize: 12,
+                                //         fontWeight: FontWeight.w500),
+                                //     maxLines: 1,
+                                //     overflow: TextOverflow.ellipsis),
+                              ],
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
-                ),
+                      Spacer(),
+                      Image.asset(
+                        "assets/car.png",
+                        width: MediaQuery.of(context).size.width * 0.55,
+                        height: 80,
+                        fit: BoxFit.contain,
+                      )
+                    ],
+                  ),
+                ],
               ),
-
-              const SizedBox(height: 20),
-
-              // Tabs Section
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(30),
-                ),
-                child: Column(
-                  children: [
-                    // Tab Headers
-                    Container(
-                      padding: const EdgeInsets.all(5),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: GestureDetector(
-                              onTap: () =>
-                                  setState(() => _selectedTabIndex = 0),
-                              child: Text(
-                                'Upcoming',
+            ),
+            const SizedBox(height: 16),
+            // Tabs Section
+            Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.1),
+                    spreadRadius: 1,
+                    blurRadius: 6,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: Column(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(16),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: () => setState(() => _selectedTabIndex = 0),
+                            child: Text('Upcoming',
                                 textAlign: TextAlign.center,
                                 style: GoogleFonts.montserrat(
+                                  fontSize: 16,
                                   fontWeight: _selectedTabIndex == 0
-                                      ? FontWeight.bold
+                                      ? FontWeight.w600
                                       : FontWeight.normal,
-                                  color: _selectedTabIndex == 0
-                                      ? AppColors.headerBlackTheme
-                                      : AppColors.iconGrey,
-                                ),
-                              ),
-                            ),
+        color: _selectedTabIndex == 0
+            ? Colors.black87
+            : Color(0xFF767676),
+                                )),
                           ),
-                          Expanded(
-                            child: GestureDetector(
-                              onTap: () =>
-                                  setState(() => _selectedTabIndex = 1),
-                              child: Container(
-                                margin: EdgeInsets.symmetric(vertical: 10),
-                                child: Text(
-                                  'Completed',
-                                  textAlign: TextAlign.center,
-                                  style: GoogleFonts.montserrat(
-                                    fontWeight: _selectedTabIndex == 1
-                                        ? FontWeight.bold
-                                        : FontWeight.normal,
-                                    color: _selectedTabIndex == 1
-                                        ? AppColors.headerBlackTheme
-                                        : AppColors.iconGrey,
-                                  ),
-                                ),
-                              ),
-                            ),
+                        ),
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: () => setState(() => _selectedTabIndex = 1),
+                            child: Text('Completed',
+                                textAlign: TextAlign.center,
+                                style: GoogleFonts.montserrat(
+                                  fontSize: 16,
+                                  fontWeight: _selectedTabIndex == 1
+                                      ? FontWeight.w600
+                                      : FontWeight.normal,
+        color: _selectedTabIndex == 1
+            ? Colors.black87
+            : Color(0xFF767676),
+                                )),
                           ),
-                          Expanded(
-                            child: GestureDetector(
-                              onTap: () =>
-                                  setState(() => _selectedTabIndex = 2),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    'Overdue',
-                                    style: GoogleFonts.montserrat(
-                                      fontWeight: _selectedTabIndex == 2
-                                          ? FontWeight.bold
-                                          : FontWeight.normal,
-                                      color: _selectedTabIndex == 2
-                                          ? AppColors.headerBlackTheme
-                                          : AppColors.iconGrey,
-                                    ),
-                                  ),
-                                  const SizedBox(width: 4),
-                                  // Icon(
-                                  //   Icons.keyboard_arrow_down,
-                                  //   size: 16,
-                                  //   color: _selectedTabIndex == 2
-                                  //       ? AppColors.sideRed
-                                  //       : AppColors.headerBlackTheme,
-                                  // ),
-                                ],
-                              ),
-                            ),
+                        ),
+Expanded(
+  child: GestureDetector(
+    onTap: () => setState(() => _selectedTabIndex = 2),
+    child: Text(
+      'Overdue',
+      textAlign: TextAlign.center,
+      style: GoogleFonts.montserrat(
+        fontSize: 15,
+        fontWeight: _selectedTabIndex == 2
+            ? FontWeight.w600
+            : FontWeight.normal,
+        color: _selectedTabIndex == 2
+            ? Colors.black87
+            : Color(0xFF767676), // ✅ replaced grey with #767676
+      ),
+    ),
+  ),
+),
+
+                        GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              _isExpanded = !_isExpanded;
+                            });
+                          },
+                          child: Icon(
+                            _isExpanded
+                                ? Icons.keyboard_arrow_up
+                                : Icons.keyboard_arrow_down,
+                            color: Colors.grey[600],
+                            size: 24,
                           ),
-                        ],
-                      ),
+                        )
+                      ],
                     ),
-
-                    // const Divider(height: 1),
-
-                    // Tab Content
+                  ),
+                  if (_isExpanded)
                     Padding(
                       padding: const EdgeInsets.all(15),
                       child: _buildTasksList(),
                     ),
-                  ],
-                ),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
   }
-  
+
+  // Build grouped tasks with date headers
+  Widget _buildTasksList() {
+    List<Map<String, dynamic>> currentTasks;
+    switch (_selectedTabIndex) {
+      case 0:
+        currentTasks = upcomingTasks;
+        break;
+      case 1:
+        currentTasks = completedTasks;
+        break;
+      case 2:
+        currentTasks = overdueTasks;
+        break;
+      default:
+        currentTasks = upcomingTasks;
+    }
+
+    if (currentTasks.isEmpty) {
+      return Text("No tasks available",
+          style: GoogleFonts.inter(fontSize: 12));
+    }
+
+    // Group by date
+    Map<String, List<Map<String, dynamic>>> groupedTasks = {};
+    for (var task in currentTasks) {
+      String date = task['date'] ?? '';
+      if (!groupedTasks.containsKey(date)) {
+        groupedTasks[date] = [];
+      }
+      groupedTasks[date]!.add(task);
+    }
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: groupedTasks.entries.map((entry) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            buildDateHeader(entry.key),
+            const SizedBox(height: 20),
+            Column(
+              children:
+                  entry.value.map((task) => _buildTaskItem(task)).toList(),
+            ),
+          ],
+        );
+      }).toList(),
+    );
+  }
+
+  Widget _buildTaskItem(Map<String, dynamic> task) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 20),
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: Colors.grey.withOpacity(0.2)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.7),
+            spreadRadius: 1,
+            blurRadius: 2.0,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          CircleAvatar(
+            backgroundColor: task['backgroundColor'],
+            radius: 16,
+            child: Icon(task['icon'], color: task['color'], size: 16),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Subject (bold) + Date (regular)
+                RichText(
+                  text: TextSpan(
+                    children: [
+                      TextSpan(
+                        text: task['title'],
+                        style: GoogleFonts.inter(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600, // Bold
+                          color: Colors.black,
+                          height: 1.3,
+                        ),
+                      ),
+                      TextSpan(
+                        text: " • ${task['date']}",
+                        style: GoogleFonts.inter(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w400, // Regular
+                          color: Colors.grey[700],
+                          height: 1.3,
+                        ),
+                      ),
+                    ],
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  task['description'],
+                  style: GoogleFonts.inter(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w400,
+                    color: Colors.grey[600],
+                    height: 1.3,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
+            ),
+          )
+        ],
+      ),
+    );
+  }
 }
-
-// import 'dart:convert';
-// import 'package:flutter/material.dart';
-// import 'package:flutter/services.dart';
-// import 'package:flutter_svg/svg.dart';
-// import 'package:get/get.dart';
-// import 'package:google_fonts/google_fonts.dart';
-// import 'package:intl/intl.dart';
-// import 'package:shared_preferences/shared_preferences.dart';
-// import 'package:http/http.dart' as http;
-// import 'package:smartcare/config/component/colors.dart';
-// import 'package:smartcare/config/component/font.dart';
-// import 'package:smartcare/widgets/timeline_widget.dart';
-
-// class FollowupsDetails extends StatefulWidget {
-//   FollowupsDetails({super.key});
-
-//   @override
-//   State<FollowupsDetails> createState() => _FollowupsDetailsState();
-// }
-
-// class _FollowupsDetailsState extends State<FollowupsDetails> {
-//   bool isLoading = false;
-//   int _childButtonIndex = 0;
-//   Widget _selectedTaskWidget = Container();
-
-//   int overdueCount = 0;
-
-//   bool _isHidden = false;
-//   bool _isHiddenTop = true;
-//   late ScrollController scrollController;
-//   // final FabController fabController = Get.put(FabController());
-//   String leadId = '';
-
-//   @override
-//   void initState() {
-//     super.initState();
-//     // _callLogsWidget = TimelineEightWid(tasks: upcomingTasks, upcomingEvents: upcomingEvents);
-//   }
-
-//   @override
-//   void dispose() {
-//     super.dispose();
-//   }
-
-//   String formatDate(String date) {
-//     try {
-//       final DateTime parsedDate = DateFormat("yyyy-MM-dd").parse(date);
-//       return DateFormat("d MMM").format(parsedDate); // Outputs "22 May"
-//     } catch (e) {
-//       print('Error formatting date: $e');
-//       return 'N/A';
-//     }
-//   }
-
-//   // ✅ Function to Convert 24-hour Time to 12-hour Format
-//   String _formatTime(String? time) {
-//     if (time == null || time.isEmpty) return 'N/A';
-
-//     try {
-//       DateTime parsedTime = DateFormat("HH:mm").parse(time);
-//       return DateFormat("hh:mm").format(parsedTime);
-//     } catch (e) {
-//       print("Error formatting time: $e");
-//       return 'Invalid Time';
-//     }
-//   }
-
-//   // Helper method to build ContactRow widget
-//   // Widget _buildContactRow({
-//   //   required IconData icon,
-//   //   required String title,
-//   //   required String subtitle,
-//   // }) {
-//   //   return ContactRow(
-//   //     icon: icon,
-//   //     title: title,
-//   //     subtitle: subtitle,
-//   //   );
-//   // }
-
-//   // Helper method to get icon color based on category
-//   Color _getIconColor(String category) {
-//     switch (category) {
-//       case 'outgoing':
-//         return AppColors.colorsBlue;
-//       case 'incoming':
-//         return AppColors.sideGreen;
-//       case 'missed':
-//         return AppColors.sideRed;
-//       case 'rejected':
-//         return AppColors.iconGrey;
-//       default:
-//         return AppColors.iconGrey;
-//     }
-//   }
-
-//   bool isFabExpanded = false;
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       // backgroundColor: AppColors.backgroundLightGrey,
-//       appBar: AppBar(
-//         backgroundColor: AppColors.white,
-//         // title: Text('Enquiry', style: AppFont.appbarfontWhite(context)),
-//         title: Align(
-//           alignment: Alignment.centerLeft,
-//           child: Column(
-//             crossAxisAlignment: CrossAxisAlignment.start,
-//             children: [
-//               Text(
-//                 'Follow-ups',
-//                 style: AppFont.appbarfontmedium14Bold(context),
-//               ),
-//             ],
-//           ),
-//         ),
-//         leading: IconButton(
-//           icon: const Icon(
-//             Icons.arrow_back_ios_new_outlined,
-//             color: AppColors.headerBlackTheme,
-//           ),
-//           onPressed: () {
-//             Navigator.pop(context);
-//           },
-//         ),
-//         elevation: 0,
-//       ),
-//       body: Stack(
-//         children: [
-//           Scaffold(
-//             body: Container(
-//               width: double.infinity, // ✅ Ensures full width
-//               height: double.infinity,
-//               decoration: BoxDecoration(color: AppColors.backgroundLightGrey),
-//               child: SafeArea(
-//                 child: SingleChildScrollView(
-//                   child: Padding(
-//                     padding: const EdgeInsets.all(10.0),
-//                     child: Column(
-//                       children: [
-//                         // Main Container with Flexbox Layout
-//                         Container(
-//                           padding: const EdgeInsets.all(15),
-//                           decoration: BoxDecoration(
-//                             color: Colors.white,
-//                             borderRadius: BorderRadius.circular(10),
-//                           ),
-
-//                           child: Column(
-//                             children: [
-//                               // Profile Section (Icon, Name, Divider, Gmail, Car Name)
-//                               Row(
-//                                 children: [
-//                                   // Profile Icon and Name
-//                                   Container(
-//                                     padding: const EdgeInsets.all(5),
-//                                     decoration: BoxDecoration(
-//                                       color: const Color.fromARGB(
-//                                         0,
-//                                         255,
-//                                         255,
-//                                         255,
-//                                       ),
-//                                       borderRadius: BorderRadius.circular(50),
-//                                     ),
-//                                     child: Text(
-//                                       'Aarav Sharma',
-//                                       style: AppFont.appbarfontmedium14Bold(
-//                                         context,
-//                                       ),
-//                                     ),
-//                                   ),
-//                                   const SizedBox(width: 5),
-//                                   Container(
-//                                     width: 1,
-//                                     height: 20,
-//                                     color: AppColors.headerBlackTheme,
-//                                     margin: EdgeInsets.only(right: 10),
-//                                   ),
-
-//                                   const SizedBox(width: 5),
-//                                   Expanded(
-//                                     child: Column(
-//                                       // mainAxisAlignment: MainAxisAlignment.start,
-//                                       crossAxisAlignment:
-//                                           CrossAxisAlignment.start,
-//                                       children: [
-//                                         Text(
-//                                           textAlign: TextAlign.left,
-//                                           'Aarav.sharma@gmail.com',
-//                                           style:
-//                                               AppFont.appbarfontmedium12Theme(
-//                                                 context,
-//                                               ),
-//                                         ),
-//                                       ],
-//                                     ),
-//                                   ),
-//                                 ],
-//                               ),
-//                               const SizedBox(height: 5),
-//                               Align(
-//                                 alignment: Alignment.centerLeft,
-//                                 child: Container(
-//                                   margin: EdgeInsets.only(left: 5),
-//                                   child: Text(
-//                                     textAlign: TextAlign.left,
-//                                     'Discovery Sport',
-//                                     style: AppFont.appbarfontmedium12Theme(
-//                                       context,
-//                                     ),
-//                                   ),
-//                                 ),
-//                               ),
-//                               Container(
-//                                 padding: EdgeInsets.symmetric(horizontal: 5),
-//                                 margin: EdgeInsets.only(top: 10),
-//                                 decoration: BoxDecoration(
-//                                   color: AppColors.backgroundLightGrey,
-//                                   borderRadius: BorderRadius.circular(10),
-//                                 ),
-//                                 child: Row(
-//                                   children: [
-//                                     // Profile Icon and Name
-//                                     Expanded(
-//                                       child: Container(
-//                                         margin: EdgeInsets.only(left: 5),
-//                                         padding: const EdgeInsets.symmetric(
-//                                           vertical: 5,
-//                                         ),
-//                                         decoration: BoxDecoration(
-//                                           color: const Color.fromARGB(
-//                                             0,
-//                                             255,
-//                                             255,
-//                                             255,
-//                                           ),
-//                                           borderRadius: BorderRadius.circular(
-//                                             50,
-//                                           ),
-//                                         ),
-//                                         child: Column(
-//                                           crossAxisAlignment:
-//                                               CrossAxisAlignment.start,
-//                                           children: [
-//                                             Text(
-//                                               'Purchase date',
-//                                               style:
-//                                                   AppFont.appbarfontsmallnewtheme(
-//                                                     context,
-//                                                   ),
-//                                             ),
-//                                             Text(
-//                                               '28 Sep 2024',
-//                                               style:
-//                                                   AppFont.appbarfontmedium12Theme(
-//                                                     context,
-//                                                   ),
-//                                             ),
-//                                           ],
-//                                         ),
-//                                       ),
-//                                     ),
-//                                     const SizedBox(width: 2),
-//                                     Container(
-//                                       width: .5,
-//                                       height: 20,
-//                                       color: AppColors.headerBlackTheme,
-//                                       margin: EdgeInsets.only(right: 10),
-//                                     ),
-
-//                                     Expanded(
-//                                       child: Container(
-//                                         margin: EdgeInsets.only(left: 5),
-//                                         padding: const EdgeInsets.symmetric(
-//                                           vertical: 5,
-//                                         ),
-//                                         decoration: BoxDecoration(
-//                                           color: const Color.fromARGB(
-//                                             0,
-//                                             255,
-//                                             255,
-//                                             255,
-//                                           ),
-//                                           borderRadius: BorderRadius.circular(
-//                                             50,
-//                                           ),
-//                                         ),
-//                                         child: Column(
-//                                           crossAxisAlignment:
-//                                               CrossAxisAlignment.start,
-//                                           children: [
-//                                             Text(
-//                                               'Next Service',
-//                                               style:
-//                                                   AppFont.appbarfontsmallnewtheme(
-//                                                     context,
-//                                                   ),
-//                                             ),
-//                                             Text(
-//                                               '29 Sep 2024',
-//                                               style:
-//                                                   AppFont.appbarfontmedium12Theme(
-//                                                     context,
-//                                                   ),
-//                                             ),
-//                                           ],
-//                                         ),
-//                                       ),
-//                                     ),
-
-//                                     const SizedBox(width: 2),
-//                                     Container(
-//                                       width: .5,
-//                                       height: 20,
-//                                       color: AppColors.headerBlackTheme,
-//                                       margin: EdgeInsets.only(right: 10),
-//                                     ),
-
-//                                     const SizedBox(width: 5),
-//                                     Expanded(
-//                                       child: Container(
-//                                         margin: EdgeInsets.only(left: 5),
-//                                         padding: const EdgeInsets.symmetric(
-//                                           vertical: 5,
-//                                         ),
-//                                         decoration: BoxDecoration(
-//                                           color: const Color.fromARGB(
-//                                             0,
-//                                             255,
-//                                             255,
-//                                             255,
-//                                           ),
-//                                           borderRadius: BorderRadius.circular(
-//                                             50,
-//                                           ),
-//                                         ),
-//                                         child: Column(
-//                                           crossAxisAlignment:
-//                                               CrossAxisAlignment.start,
-//                                           children: [
-//                                             Text(
-//                                               'Dealership',
-//                                               style:
-//                                                   AppFont.appbarfontsmallnewtheme(
-//                                                     context,
-//                                                   ),
-//                                             ),
-//                                             Text(
-//                                               'Mumbai-navneet',
-//                                               style:
-//                                                   AppFont.appbarfontmedium12Theme(
-//                                                     context,
-//                                                   ),
-//                                             ),
-//                                           ],
-//                                         ),
-//                                       ),
-//                                     ),
-//                                   ],
-//                                 ),
-//                               ),
-
-//                               const SizedBox(height: 10),
-//                               Container(
-//                                 padding: EdgeInsets.symmetric(horizontal: 5),
-//                                 margin: EdgeInsets.only(top: 10),
-//                                 decoration: BoxDecoration(
-//                                   color: AppColors.backgroundLightGrey,
-//                                   borderRadius: BorderRadius.circular(10),
-//                                 ),
-//                                 child: Row(
-//                                   children: [
-//                                     // Profile Icon and Name
-//                                     Container(
-//                                       margin: EdgeInsets.only(left: 5),
-//                                       padding: const EdgeInsets.symmetric(
-//                                         vertical: 5,
-//                                       ),
-//                                       decoration: BoxDecoration(
-//                                         color: const Color.fromARGB(
-//                                           0,
-//                                           255,
-//                                           255,
-//                                           255,
-//                                         ),
-//                                         borderRadius: BorderRadius.circular(50),
-//                                       ),
-//                                       child: Column(
-//                                         crossAxisAlignment:
-//                                             CrossAxisAlignment.start,
-//                                         children: [
-//                                           Text(
-//                                             'Purchase date',
-//                                             style:
-//                                                 AppFont.appbarfontsmallnewtheme(
-//                                                   context,
-//                                                 ),
-//                                           ),
-//                                           Text(
-//                                             '28 Sep 2024',
-//                                             style:
-//                                                 AppFont.appbarfontmedium12Theme(
-//                                                   context,
-//                                                 ),
-//                                           ),
-//                                         ],
-//                                       ),
-//                                     ),
-//                                     const SizedBox(width: 10),
-//                                     Container(
-//                                       width: .5,
-//                                       height: 20,
-//                                       color: AppColors.headerBlackTheme,
-//                                       margin: EdgeInsets.only(right: 10),
-//                                     ),
-
-//                                     Container(
-//                                       margin: EdgeInsets.only(left: 5),
-//                                       padding: const EdgeInsets.symmetric(
-//                                         vertical: 5,
-//                                       ),
-//                                       decoration: BoxDecoration(
-//                                         color: const Color.fromARGB(
-//                                           0,
-//                                           255,
-//                                           255,
-//                                           255,
-//                                         ),
-//                                         borderRadius: BorderRadius.circular(50),
-//                                       ),
-//                                       child: Column(
-//                                         crossAxisAlignment:
-//                                             CrossAxisAlignment.start,
-//                                         children: [
-//                                           Text(
-//                                             'Next Service',
-//                                             style:
-//                                                 AppFont.appbarfontsmallnewtheme(
-//                                                   context,
-//                                                 ),
-//                                           ),
-//                                           Text(
-//                                             '29 Sep 2024',
-//                                             style:
-//                                                 AppFont.appbarfontmedium12Theme(
-//                                                   context,
-//                                                 ),
-//                                           ),
-//                                         ],
-//                                       ),
-//                                     ),
-//                                   ],
-//                                 ),
-//                               ),
-
-//                               Container(
-//                                 width: 100,
-//                                 height: 100,
-//                                 decoration: BoxDecoration(
-//                                   shape: BoxShape.circle,
-//                                 ),
-//                                 child: SvgPicture.asset("assets/imgcar.svg"),
-//                               ),
-//                             ],
-//                           ),
-//                         ),
-
-//                         const SizedBox(height: 10),
-//                       ],
-//                     ),
-//                   ),
-//                 ),
-//               ),
-//             ),
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-// }
