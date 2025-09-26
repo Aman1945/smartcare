@@ -80,7 +80,7 @@ Future<void> showServiceAppointmentPopup(BuildContext context) {
                   style: GoogleFonts.montserrat(
                     color: const Color(0xFF4E4E4E), // Name color
                     fontWeight: FontWeight.w700,
-                    fontSize: 17.5,
+                    fontSize: 15,
                   ),
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -183,10 +183,13 @@ Future<void> showServiceAppointmentPopup(BuildContext context) {
                         fontWeight: FontWeight.w400,
                         color: Colors.black,
                       ),
-                      child: ConstrainedBox(
-                        constraints: const BoxConstraints(
-                            maxWidth: 390, maxHeight: 560),
-                        child: Padding(
+child: ConstrainedBox(
+  constraints: BoxConstraints(
+    maxWidth: MediaQuery.of(context).size.width * 0.9, // 90% of screen width
+    minWidth: 280,                                    // small devices safe min
+    maxHeight: MediaQuery.of(context).size.height * 0.75, // 85% of screen height
+  ),
+  child: Padding(
                           padding: const EdgeInsets.fromLTRB(16, 18, 16, 16),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -214,15 +217,6 @@ Future<void> showServiceAppointmentPopup(BuildContext context) {
                                         fontWeight: FontWeight.w600,
                                         color: Colors.black,
 
-
-                                    //                                        Text(
-                                    //   "Action",
-                                    //   style: GoogleFonts.montserrat(
-                                    //     fontSize: 15,
-                                    //     fontWeight: FontWeight.w600,
-                                    //     color: Colors.black,
-                                    //   ),
-                                    // ), 
                                       ),
                                     ),
                                     const SizedBox(height: 10),
@@ -343,12 +337,12 @@ Future<void> showServiceAppointmentPopup(BuildContext context) {
                                         }),
                                       ],
                                     ),
-                                    const SizedBox(height: 60),
+                                    const SizedBox(height: 10),
                                   ],
                                 ),
                               ),
 
-                              const SizedBox(height: 20),
+                              const SizedBox(height: 0),
 
                               // Footer
                               Row(

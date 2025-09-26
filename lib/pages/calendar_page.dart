@@ -307,7 +307,7 @@ data.add([
  return Scaffold(
  backgroundColor: AppColors.white,
  appBar: AppBar(
- backgroundColor: Colors.white,
+backgroundColor: AppColors.headerBlackTheme,
  elevation: 0,
  automaticallyImplyLeading: false,
 title: Text(
@@ -315,7 +315,7 @@ title: Text(
   style: GoogleFonts.montserrat(
     fontWeight: FontWeight.bold,
     fontSize: 24,
-     color: const Color(0xFF212E51),
+     color: const Color.fromARGB(255, 255, 255, 255),
   ),
 ),
 

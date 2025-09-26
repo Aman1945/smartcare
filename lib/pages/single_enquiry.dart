@@ -818,23 +818,24 @@ class _FollowupsDetailsState extends State<FollowupsDetails> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xFFF8F9FA),
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        backgroundColor: Colors.white,
-        elevation: 0,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-        title: Text(
-          widget.title,
-          style: GoogleFonts.poppins(
-            color: Colors.black,
-            fontSize: 20,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-      ),
+appBar: AppBar(
+  automaticallyImplyLeading: false,
+  backgroundColor: AppColors.headerBlackTheme, // AppBar background white
+  elevation: 0,
+  leading: IconButton(
+    icon: const Icon(Icons.arrow_back, color: Colors.white), // back button white
+    onPressed: () => Navigator.of(context).pop(),
+  ),
+  title: Text(
+    widget.title,
+    style: GoogleFonts.montserrat( // switched to Montserrat to match rest of UI
+      color: Colors.white, // title text white
+      fontSize: 20,
+      fontWeight: FontWeight.w600,
+    ),
+  ),
+),
+
       body: SingleChildScrollView(
         child: Column(
           children: [

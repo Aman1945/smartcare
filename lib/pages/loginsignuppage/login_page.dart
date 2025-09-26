@@ -66,7 +66,7 @@
 //   Widget build(BuildContext context) {
 //     return Scaffold(
 //       body: SafeArea(
-//         child: GestureDetector(
+//         child: GestureDetecto r(
 //           onTap: () => FocusScope.of(context).unfocus(),
 //           child: SingleChildScrollView(
 //             padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 40),

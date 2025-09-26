@@ -317,7 +317,7 @@ import 'package:get/get.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:smartcare/pages/favourite_page.dart';
 import 'package:smartcare/config/component/colors.dart';
 import 'package:smartcare/pages/loginsignuppage/login_page.dart';
 import 'package:smartcare/pages/myEnquiriesPage.dart';
@@ -415,6 +415,9 @@ class BottomNavigation extends StatelessWidget {
                 onTap: () => _showMoreBottomSheet(context),
               ),
             );
+
+
+            
 
             return Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -555,6 +558,21 @@ ListTile(
     Get.to(() => const MyEnquiriesPage()); // open tabs page
   },
 ),
+// ListTile(
+//   leading: const Icon(Icons.star_border, size: 28),
+//   title: Text(
+//     'Favourite',
+//     style: GoogleFonts.poppins( // ✅ make it same as others
+//       fontSize: 18,
+//     ),
+//   ),
+//   onTap: () {
+//     Get.back(); // close bottom sheet
+//     // Get.to(() =>  FavouritePage()); // open Favourite page
+//   },
+// ),
+
+
                 if (teamRole == "SM")
                   ListTile(
                     leading: const Icon(Icons.group, size: 28),

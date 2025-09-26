@@ -347,7 +347,7 @@ class _CalendarWithTimelineState extends State<AppointmentPage> {
       // AppBar
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        backgroundColor: AppColors.white,
+backgroundColor: AppColors.headerBlackTheme,
         title: Align(
           alignment: Alignment.centerLeft,
           child: Text(
@@ -356,7 +356,7 @@ class _CalendarWithTimelineState extends State<AppointmentPage> {
             style: GoogleFonts.montserrat(
               fontWeight: FontWeight.bold,
               fontSize: 24,
-              color: const Color(0xFF212E51),
+              color: const Color.fromRGBO(255, 255, 255, 1),
             ),
           ),
         ),

@@ -47,6 +47,10 @@ dependencies:
   fl_chart: ^0.71.0
   flutter_screenutil: ^5.9.3
   flutter_svg: ^2.0.9
+  speech_to_text: ^7.3.0
+  font_awesome_flutter: ^10.9.1
+  dropdown_button2: ^2.3.9
+  provider: ^6.1.5+1
 
   # table_calendar: ^3.0.9
 
