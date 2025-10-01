@@ -89,10 +89,14 @@ flutter:
     - assets/request.svg
     - assets/imgcar.svg
     - assets/target.svg
+<<<<<<< Updated upstream
     - assets/car.png
     - assets/your_missed_icon.svg
     - assets/logo-black.svg
     # - assets/imgcar.svg
+=======
+    - assets/your_missed_icon.svg
+>>>>>>> Stashed changes
 
   # To add assets to your application, add an assets section, like this:
   # assets:
